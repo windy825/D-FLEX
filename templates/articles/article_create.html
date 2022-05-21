@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h5 class="my-3 border-bottom pb-2">Article Create</h5>
+  <form action="{% url 'articles:article_create' %}" method="post" class="post-form my-3">
+    {% csrf_token %}
+    <!-- 오류 표시 -->
+    <!-- 오류 표시 -->
+    <div class="form-group my-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" name="title" id="title" value="{{ article_form.title.value|default_if_none:'' }}" class="form-control">
+    </div>
+    <div class="form-group my-3">
+      <label for="content" class="form-label">Content</label>
+      <textarea type="text" name="content" id="content" rows="10" class="form-control">
+        {{ article_form.content.value|default_if_none:'' }}
+      </textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
+  <a href="{% url 'articles:articles' %}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

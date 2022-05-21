@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% include '_linkbar.html' %}
+
+{% block content %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">번호</th>
+        <th scope="col">좋아요</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성자</th>
+        <th scope="col">작성일</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>
+          {{ article.pk }}
+        </td>
+        <td>
+          <span class="badge text-bg-danger">
+            {{ article.like_count }}
+          </span>
+        </td>
+        <td>
+          <a href="{% url 'articles:article_detail' article.pk %}" class="text-decoration-none">
+            {{ article.title }}
+            <span class="badge text-bg-info">
+              {{ article.comment_count }}
+            </span>
+          </a>
+        </td>
+        <td>
+          <a href="{% url 'accounts:profile' article.user.username %}" class="text-decoration-none">
+            {{ article.user.username }}
+          </a>
+        </td>
+        <td>
+          {{ article.created_at }}
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <a href="{% url 'articles:article_create' %}" class="btn btn-primary">Create</a>
+</div>
+{% endblock %}
