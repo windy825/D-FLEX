@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'articles',
     'movies',
+    'home',
 
     # 3rd party 
     'django_seed',
