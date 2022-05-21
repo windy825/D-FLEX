@@ -22,20 +22,22 @@
           <router-link :to="{ name: 'logout' }" class="nav-link">Logout</router-link>
         </li> {% endcomment %}
 
-        
+
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'accounts:profile' %}" class="nav-link">{{ user.username }}'s Profile</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a>
+        </li>
+        {% else %}
         <li class="nav-item">
           <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
         </li>
         <li class="nav-item">
           <a href="{% url 'accounts:signup' %}" class="nav-link">Signup</a>
         </li>
-
-        <li class="nav-item">
-          <a href="{% url 'accounts:profile' %}" class="nav-link">{{ '' }}'s Profile</a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a>
-        </li>
+        {% endif %}
 
 
         <!-- <li class="nav-item dropdown">
