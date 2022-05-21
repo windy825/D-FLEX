@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>FOR YOU</h1>
+    <br>
+    <hr>
+    <br>
+    <h3>배우 기반 (같은 배우 출연)</h3>
+    {% for movie in recommend_movies_by_actors %}
+        {{ movie.title }} | {{ movie.actors }}
+        <hr>
+    {% endfor %}
+    <hr>
+    <h3>장르 기반 (2개 이상 동일)</h3>
+    {% for movie in recommend_movies_by_genres %}
+        {{ movie.title }} | {{ movie.genres }}
+        <hr>
+    {% endfor %}
+</body>
+</html>

@@ -60,3 +60,53 @@ def review_delete(request, movie_pk, review_pk):
         if request.user == review.user:
             review.delete()
     return redirect('movies:movie_detail', movie_pk)
+
+
+
+
+def for_you(request, movie_pk):
+    movies = Movie.objects.all().filter()
+    pick_movie = get_object_or_404(Movie, pk=movie_pk)
+    
+    # 배우 기반 추천
+    actors = pick_movie.actors
+    recommend_movies_by_actors = []
+    flag = 0
+    for movie in movies:
+        if flag:
+            flag = 0
+            continue
+        for actor in actors.strip('[]').split(','):
+            if flag:
+                break
+            if actor in movie.actors:
+                recommend_movies_by_actors.append(movie)
+                flag = 1
+                break
+
+    # 장르 기반 추천
+    genres = pick_movie.genres
+    recommend_movies_by_genres = []
+    for movie in movies:
+        if flag:
+            flag = 0
+            continue
+        cnt = 0
+        for genre in genres.strip('[]').split(','):
+            if genre in movie.genres:
+                cnt += 1
+                
+            if cnt >= 2:
+                    recommend_movies_by_genres.append(movie)
+                    flag = 1
+                    break
+    
+
+    context = {
+        'recommend_movies_by_actors' : recommend_movies_by_actors,
+        'recommend_movies_by_genres' : recommend_movies_by_genres
+    }
+
+    return render(request, 'movies/movie_for_you.html', context)
+    
+    # recommend_movies_by_
