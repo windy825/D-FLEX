@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from articles.forms import ArticleForm, CommentForm
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
+from django.http import JsonResponse
 
 
 from .models import Article, Comment
@@ -80,6 +81,25 @@ def article_delete(request, article_pk):
 
 
 @require_POST
+def article_like(request, article_pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=article_pk)
+        if article.like_users.filter(pk=request.user.pk).exists():
+            article.like_users.remove(request.user)
+            liked = False
+        else:
+            article.like_users.add(request.user)
+            liked = True
+        context = {
+            'liked': liked,
+            'like_count': article.like_users.count(),
+        }
+        return JsonResponse(context)
+    return redirect('accounts:login')
+
+
+
+@require_POST
 def comment_create(request, article_pk):
     if request.user.is_authenticated:
         article = get_object_or_404(Article, pk=article_pk)
@@ -95,16 +115,18 @@ def comment_create(request, article_pk):
 
 
 # @require_POST
-# def comment_update(request, article_pk):
-#     if request.user.is_authenticated:
-#         article = get_object_or_404(Article, pk=article_pk)
-#     form = CommentForm(request.POST)
-#     if form.is_valid():
-#         comment = form.save(commit=False)
-#         comment.user = request.user
-#         comment.article = article
-#         comment.save()
-#     return redirect('articles:article_detail', article.pk)
+# def comment_update(request, article_pk, comment_pk):
+#     article = get_object_or_404(Article, pk=article_pk)
+#     comment = get_object_or_404(Comment, pk=comment_pk)
+#     if request.user == comment.user:
+        
+#         form = CommentForm(request.POST, instance=comment)
+#         if form.is_valid():
+#             form.save()
+#             context = {
+                
+#             }
+#             return JsonResponse(context)
 #     return redirect('accounts:login')
 
 

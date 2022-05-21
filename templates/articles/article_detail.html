@@ -6,12 +6,6 @@
   <h2 class="border-bottom py-2">{{ article.title }}</h2>
   <!-- 게시글 -->
   <div class="row my-3">
-    <div class="col-1">
-      <div class="bg-light text-center p-3 border fw-bolder mb-1"></div>
-      <div class="d-grid gap-1">
-        <a href="" class="recommend btn btn-sm btn-secondary">추천</a>
-      </div>
-    </div>
     <div>
       <div class="card">
         <div class="card-body">
@@ -36,23 +30,47 @@
             <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-sm btn-outline-info">
               Update
             </a>
-            {% comment %}<a href="{% url 'articles:article_delete' article.pk %}" class="delete btn btn-sm btn-outline-danger">
-              Delete
-            </a>{% endcomment %}
             <form action="{% url 'articles:article_delete' article.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-danger">Delete</button>
+              <button type="submit" class="btn btn-outline-danger">Delete</button>
             </form>
           </div>
           {% endif %}
         </div>
         <!-- 목록으로 -->
-        <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-outline-secondary">Back</a>
       </div>
+      <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-outline-secondary fw-bold">Back</a>
     </div>
   </div>
   <!-- 댓글 개수 -->
-  <h6 class="border-bottom my-3 py-2">{{ article.comment_set.all.count }}개의 댓글이 있습니다.</h6>
+
+
+  <div class="d-flex border-bottom my-2">
+      {% if request.user.is_authenticated %}
+        <form class="like-form p-0" data-article-id="{{ article.pk }}">
+          {% csrf_token %}
+          {% if user in article.like_users.all %}
+            <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4">♥</button>
+          {% else %}
+            <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4">♡</button>
+          {% endif %}
+        </form>
+      {% endif %}
+    <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
+      좋아요 
+      <span id="like-count-{{ article.pk }}" class="ms-2 fw-bold">
+        {{ article.like_users.all|length }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-center p-0 m-0">
+      댓글 
+      <span class="ms-2 fw-bold">
+        {{ article.comment_set.all.count }}
+      </span>
+    </div>
+  </div>
+
+
   <div class="card">
     <div class="card-body">
       <!-- 댓글 목록 -->
@@ -63,9 +81,14 @@
               <div class="small text-muted">
                 {{ comment.user }} {{ comment.created_at|date:'y-m-d H:i' }}
                 {% if request.user == comment.user %}
-                  {% comment %}<a href="{% url 'articles:comment_delete' article.pk comment.pk %}" class="small delete text-decoration-none">
-                    Delete
-                  </a>{% endcomment %}
+                  {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="text-info">Update</button>
+                  </form> {% endcomment %}
+                  <form action="#" method="">
+                    {% csrf_token %}
+                    <button type="submit" class="text-info">Update</button>
+                  </form>
                   <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="text-danger">Delete</button>
@@ -88,4 +111,37 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  const likeForm = document.querySelector('.like-form');
+  likeForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const articleId = event.target.dataset.articleId;
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    axios({
+      url: `/articles/${articleId}/like/`,
+      method: 'post',
+      headers: { 'X-CSRFToken': csrftoken },
+    })
+      .then(res => {
+        const likeCount = res.data.like_count;
+        const liked = res.data.liked;
+        const $likeButton = document.querySelector(`#like-${articleId}`);
+        const $likeCount = document.querySelector(`#like-count-${articleId}`);
+        if (liked) {
+          $likeButton.classList.add('text-danger');
+          $likeButton.innerText ='♥';
+        } else {
+          $likeButton.classList.remove('text-danger');
+          $likeButton.innerText = '♡';
+        }
+        $likeCount.innerText = likeCount;
+      })
+      .catch(err => console.error(err.response));
+  });
+
+  
+</script>
 {% endblock %}
