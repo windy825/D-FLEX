@@ -92,7 +92,7 @@ def comment_create(request, article_pk):
 
 
 @login_required
-def comment_update(request, article_pk, comment_pk):
+def comment_update(request, article_pk):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
     article = get_object_or_404(Article, pk=article_pk)
