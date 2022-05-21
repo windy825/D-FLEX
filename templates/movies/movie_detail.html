@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<p>{{ movie.title }}</p>
+
+<img src="{{ movie.poster_path }}" alt="img" style="height: 300px;">
+
+<p>{{ movie.overview }}</p>
+
+<p>{{ movie.release_date }}</p>
+
+{% for review in review_set %}
+  내용: <p>{{ review.content }}</p>
+  작성자: <p>{{ review.user.username }}</p>
+  별점: <p>{{ review.rating }}</p>
+{% endfor %}
+
+<form action="{% url 'movies:review_create' movie.pk %}" method="post">
+  {% csrf_token %}
+  {{ review_form }}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

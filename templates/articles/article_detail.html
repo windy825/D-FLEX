@@ -36,9 +36,13 @@
             <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-sm btn-outline-info">
               Update
             </a>
-            <a href="{% url 'articles:article_delete' article.pk %}" class="delete btn btn-sm btn-outline-danger">
+            {% comment %}<a href="{% url 'articles:article_delete' article.pk %}" class="delete btn btn-sm btn-outline-danger">
               Delete
-            </a>
+            </a>{% endcomment %}
+            <form action="{% url 'articles:article_delete' article.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
           </div>
           {% endif %}
         </div>
@@ -59,9 +63,13 @@
               <div class="small text-muted">
                 {{ comment.user }} {{ comment.created_at|date:'y-m-d H:i' }}
                 {% if request.user == comment.user %}
-                  <a href="{% url 'articles:comment_delete' article.pk comment.pk %}" class="small delete text-decoration-none">
+                  {% comment %}<a href="{% url 'articles:comment_delete' article.pk comment.pk %}" class="small delete text-decoration-none">
                     Delete
-                  </a>
+                  </a>{% endcomment %}
+                  <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="text-danger">Delete</button>
+                  </form>
                 {% endif %}
               </div>
               <span style="white-space: pre-line;">{{ comment.content|linebreaksbr }}</span>

@@ -9,13 +9,11 @@
     <!-- 오류 표시 -->
     <div class="form-group my-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" name="title" id="title" value="{{ article_form.title.value|default_if_none:'' }}" class="form-control">
+      <input type="text" name="title" id="title" class="form-control">
     </div>
     <div class="form-group my-3">
       <label for="content" class="form-label">Content</label>
-      <textarea type="text" name="content" id="content" rows="10" class="form-control">
-        {{ article_form.content.value|default_if_none:'' }}
-      </textarea>
+      <textarea type="text" name="content" id="content" rows="10" class="form-control"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
   </form>
