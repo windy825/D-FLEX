@@ -13,6 +13,7 @@ def articles(request):
         }
         return render(request, 'articles:articles', context)
 
+
 @login_required
 def article_create(request):
     if not request.user.is_authenticated:
@@ -42,6 +43,7 @@ def article_detail(request, article_pk):
         'comment_form':form
     }
     return render(request, 'articles:article_detail', context)
+
 
 @login_required
 def article_update(request, article_pk):
