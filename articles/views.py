@@ -13,7 +13,7 @@ def articles(request):
         context = {
             'articles':articles,
         }
-        return render(request, 'articles/articles', context)
+        return render(request, 'articles/articles.html', context)
 
 
 @login_required
@@ -33,7 +33,7 @@ def article_create(request):
         context = {
             'article_form' : form
         }
-        return render(request, 'articles/article_create', context)
+        return render(request, 'articles/article_create.html', context)
 
 
 @login_required
@@ -44,7 +44,7 @@ def article_detail(request, article_pk):
         'article':article,
         'comment_form':form
     }
-    return render(request, 'articles/article_detail', context)
+    return render(request, 'articles/article_detail.html', context)
 
 
 @login_required
@@ -63,7 +63,7 @@ def article_update(request, article_pk):
         context = {
             'article_form': form
         }
-        return render(request, 'articles/article_create', context)
+        return render(request, 'articles/article_create.html', context)
     else:
         return redirect('articles:article_detail', article.pk)
 
