@@ -1,17 +1,19 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from articles.forms import ArticleForm, CommentForm
 
+from .models import Article, Comment
 
-from .models import Article
+
 
 def articles(request):
     if request.method == 'GET':
-        articles = get_list_or_404(Article)
+        articles = Article.objects.order_by('-pk')
+
         context = {
             'articles':articles,
         }
-        return render(request, 'articles:articles', context)
+        return render(request, 'articles/articles', context)
 
 
 @login_required
@@ -31,7 +33,7 @@ def article_create(request):
         context = {
             'article_form' : form
         }
-        return render(request, 'articles:article_create', context)
+        return render(request, 'articles/article_create', context)
 
 
 @login_required
@@ -42,29 +44,71 @@ def article_detail(request, article_pk):
         'article':article,
         'comment_form':form
     }
-    return render(request, 'articles:article_detail', context)
+    return render(request, 'articles/article_detail', context)
 
 
 @login_required
 def article_update(request, article_pk):
-    pass
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.user == article.user:
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, instance=article)
+            if form.is_valid():
+                article = form.save(commit=False)
+                article.user = request.user
+                article.save()
+                return redirect('articles:article_detail', article.pk)
+        else:
+            form = ArticleForm(instance=article)
+        context = {
+            'article_form': form
+        }
+        return render(request, 'articles/article_create', context)
+    else:
+        return redirect('articles:article_detail', article.pk)
 
 
 @login_required
 def article_delete(request, article_pk):
-    pass
+    if request.method == 'POST':
+        article = get_object_or_404(Article, pk=article_pk)
+        if request.user == article.user:
+            article.delete()
+    return redirect('articles:articles')
 
 
 @login_required
 def comment_create(request, article_pk):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+    article = get_object_or_404(Article, pk=article_pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.article = article
+        comment.save()
+    return redirect('articles:article_detail', article.pk)
 
 
 @login_required
 def comment_update(request, article_pk, comment_pk):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+    article = get_object_or_404(Article, pk=article_pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.article = article
+        comment.save()
+    return redirect('articles:article_detail', article.pk)
+
 
 @login_required
 def comment_delete(request, article_pk, comment_pk):
-    pass
-
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, pk=comment_pk)
+        if request.user == comment.user:
+            comment.delete()
+    return redirect('articles:article_detail', article_pk)
