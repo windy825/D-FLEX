@@ -2,11 +2,11 @@
 
 {% block content %}
 {% include '_linkbar.html' %}
-<div class="container">
-  <table class="table table-hover bg-light rounded">
+<div class="container bg-dark-secondary p-2">
+  <table class="table table-hover bg-dark-secondary rounded">
     <!-- thead -->
     <thead>
-      <tr>
+      <tr class="text-light">
         <th scope="col" class="col-1">번호</th>
         <th scope="col" class="col-1">❤</th>
         <th scope="col" class="col-5">제목</th>
@@ -17,7 +17,7 @@
     <!-- tbody -->
     <tbody>
       {% for article in articles %}
-      <tr>
+      <tr class="text-light">
         <!-- 게시글 번호 -->
         <td>
           {{ article.pk }}
@@ -25,7 +25,7 @@
         <!-- 좋아요 수 -->
         <td>
           {% if article.like_users.count > 0 %}
-            <span class="badge text-bg-danger">
+            <span class="badge text-bg-danger fw-bold">
               {{ article.like_users.count }}
             </span>
           {% endif %}
@@ -33,9 +33,9 @@
         <!-- 제목, 댓글 수 -->
         <td>
           <a href="{% url 'articles:article_detail' article.pk %}" class="text-decoration-none">
-            <span class="text-dark">{{ article.title }}</span>
+            <span class="text-light">{{ article.title }}</span>
             {% if article.comment_set.count > 0 %}
-              <span class="small text-success fw-bold py-2">
+              <span class="small text-danger fw-bold py-2">
                 {{ article.comment_set.count }}
               </span>
             {% endif %}
@@ -44,19 +44,21 @@
         <!-- 작성자 -->
         <td>
           <a href="{% url 'accounts:profile' article.user.username %}" class="text-decoration-none">
-            <span class="text-muted">{{ article.user.username }}</span>
+            <span class="text-light">{{ article.user.username }}</span>
           </a>
         </td>
         <!-- 작성일 -->
         <td>
-          <span class="text-muted" style="font-size: 12px;">{{ article.created_at|date:'y-m-d H:i' }}</span>
+          <span class="text-secondary" style="font-size: 12px;">{{ article.created_at|date:'y-m-d H:i' }}</span>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   <!-- 작성 버튼 -->
-  <a href="{% url 'articles:article_create' %}" class="btn btn-primary">Create</a>
+  <div class="container d-flex justify-content-end">
+    <a href="{% url 'articles:article_create' %}" class="btn btn-danger fw-bold fs-5 px-3 text-spacing">Create</a>
+  </div>
 </div>
 {% endblock %}
 
