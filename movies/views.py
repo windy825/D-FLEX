@@ -108,7 +108,8 @@ def for_you(request, movie_pk):
     pick_movie_keywords = set([i for i in pick_movie_keywords if i not in {'그', '된다', \
         '되어', '되고', '은', '는', '이', '가', '어느', '있는', '된', '바로', '때', '알게', '통해',\
         '위해', '할', '날', '자신을', '나오는', '무렵', '전부', '수', '자신이', '그가', '마침내',\
-        '전', '있음을', '알', '없는', '한', '후', '한', '두' }])
+        '전', '있음을', '알', '없는', '한', '후', '한', '두', '될', '채', '더', '그의', '그가', '그는',\
+        '모든', '하지만', '최고의' }])
     answer = []
     for movie in movies:
         temp = set(movie.overview.split())
@@ -120,7 +121,7 @@ def for_you(request, movie_pk):
     context = {
         'recommend_movies_by_actors' : recommend_movies_by_actors,
         'recommend_movies_by_genres' : recommend_movies_by_genres,
-        'recommend_movie_by_overview_keywords'  : answer
+        'recommend_movie_by_overview_keywords'  : answer[:7]
     }
 
     return render(request, 'movies/movie_for_you.html', context)
