@@ -22,5 +22,10 @@
         {{ movie.title }} | {{ movie.genres }}
         <hr>
     {% endfor %}
+    <hr>
+    <h3>줄거리 기반</h3>
+    {% for movie in recommend_movie_by_overview_keywords %}
+    {{ movie }}<br>
+    {% endfor %}
 </body>
 </html>

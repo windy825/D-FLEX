@@ -13,5 +13,5 @@ urlpatterns = [
     path('<int:movie_pk>/reviews/<int:review_pk>/delete/', views.review_delete, name='review_delete'),
     
     # 영화 추천
-    path('for_you/<int:movie_pk>', views.for_you, name='for_you'),
+    path('for-you/<int:movie_pk>', views.for_you, name='for_you'),
 ]

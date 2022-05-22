@@ -10,6 +10,10 @@
 
 <p>{{ movie.release_date }}</p>
 
+<button>
+  <a href="{% url 'movies:for_you' movie.pk %}">for me!</a>
+</button>
+
 {% for review in review_set %}
   내용: <p>{{ review.content }}</p>
   작성자: <p>{{ review.user.username }}</p>
