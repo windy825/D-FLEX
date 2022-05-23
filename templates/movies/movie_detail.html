@@ -17,14 +17,15 @@
           </p>
 					<p class="time">2h 28m</p>
 				</div>
-        <p class="disc">줄거리가 들어갈 자리 입니다.</p>
-				{% comment %} <p class="disc">{{ movie.overview }}</p> {% endcomment %}
-				<a href="#" target="_blank">Read More</a>
+        <div style="height:180px; overflow: hidden;">
+            {{ movie.overview }}
+        </div>
 			<div class="social-btn">
-				<button class='post_btn'>
-          <i class="fa-solid fa-comments"></i> Community
-				</button>
-				<!--USERS RATINGS-->
+        <button class='post_btn'>
+          <a href="{% url 'articles:articles' %}" style="text-decoration:none; color:white;">
+            <i class="fa-solid fa-comments"></i> Community
+          </a>
+        </button>
 				<button class='post_btn'>
 					<i class="fas fa-thumbs-up"></i> like it
 				</button>
@@ -34,18 +35,17 @@
 			</div>	
 			</div>
 		</div>
-		<div class="card_right">
-			<div class="img_container">
-				<img src="{{ movie.poster_path }}" alt="포스터">
-				</div>
-				<div class="play_btn">
-					<a href="{{ youtube }}" target="_blank">
-						<i class="fas fa-play-circle"></i>
-					</a>
-				</div>
-		  </div>
-    </div>
+		<div  class="card_right">
+			<img src="{{ movie.poster_path }}"style="max-width:100%; max-height:100%;" alt="포스터">
+			<div class="play_btn">
+				<a href="{{ youtube }}" target="_blank">
+					<i class="fas fa-play-circle"></i>
+				</a>
+			</div>
+	  </div>
   </div>
+
+
   <div class="main_card">
     <h2>회전목마~~</h2>
   </div>
@@ -66,8 +66,8 @@
   
   .main_card {
     color: #fff;
-    width: 100%;
-    height: 390px;
+    width: 90%;
+    height: 30%;
     margin: 50px auto;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -84,20 +84,21 @@
   }
   
   .card_left {
-    width: 90%;
+    width: 100%;
   }
   
 
   .card_datails {
     width: 90%;
     padding: 30px;
-    margin-top: -25px;
+    margin-top: -10px;
   }
   .card_datails  h1 {
     font-size: 30px;
+    margin-bottom:20px;
   }
   .card_right img {
-    height: 390px;
+    width: 100%;
     border-radius: 2px;
   }
   .card_right {
@@ -139,7 +140,7 @@
     text-decoration: none;
   }
   .social-btn {
-    margin-left: -10px;
+    margin-left: 10px;
   }
   .post_btn {
     color: white;

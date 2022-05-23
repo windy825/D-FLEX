@@ -22,14 +22,14 @@ def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     review_set = movie.review_set.all()    
     genres = movie.genres.strip('[]').replace("'",'').split(',')[:2]
-    
+    movie.overview = movie.overview[:300] + '. . .'
     form = ReviewForm()
     context = {
         'movie': movie,
         'review_set': review_set,
         'review_form': form,
         'genres':genres,
-        'youtube': f'https://www.youtube.com/results?search_query={movie.title}'
+        'youtube': f'https://www.youtube.com/results?search_query={movie.title}',
     }
     return render(request, 'movies/movie_detail.html', context)
 
