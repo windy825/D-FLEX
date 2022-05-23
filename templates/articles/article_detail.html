@@ -2,33 +2,33 @@
 
 {% block content %}
 <div class="container my-5 bg-dark-secondary">
-  <!-- 제목, 작성일 row -->
-  <div class="row border-bottom p-3">
-    <!-- 제목 col -->
+  <!-- 제목, 작성일 -->
+  <div class="d-flex border-bottom p-3">
+    <!-- 제목 -->
     <div class="col">
       <h2 class="text-light mb-0">
         {{ article.title }}
       </h2>
     </div>
-    <!-- 작성일 col -->
+    <!-- 작성일 -->
     <div class="col d-flex justify-content-end align-items-center">
-      <span class="text-secondary ms-auto">
+      <span class="text-secondary small ms-auto">
         {{ article.created_at|date:'y-m-d H:i' }}
       </span>
     </div>
   </div>
   <!-- 작성자, 수정일 -->
   <div class="row px-3 py-2">
-    <!-- 작성자 col -->
+    <!-- 작성자 -->
     <div class="col">
       <span class="text-secondary">
         {{ article.user.username }}
       </span>
     </div>
-    <!-- 수정일 col -->
+    <!-- 수정일 -->
     <div class="col d-flex justify-content-end align-items-center">
       {% if article.updated_at %}
-      <span class="text-secondary ms-auto">
+      <span class="text-secondary small ms-auto">
         {{ article.updated_at|date:'y-m-d H:i' }}
       </span>
       {% endif %}
@@ -54,7 +54,9 @@
           </div>
           <form action="{% url 'articles:article_delete' article.pk %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-secondary p-2 fw-bold">Delete</button>
+            <button type="submit" class="btn btn-secondary p-2 fw-bold">
+              Delete
+            </button>
           </form>
         </div>
         {% endif %}
@@ -67,8 +69,9 @@
   </div>
 
 
-  <!-- 댓글 개수 -->
+  <!-- 좋아요 버튼, 좋아요 수, 댓글 수 -->
   <div class="d-flex border-bottom my-2">
+    <!-- 좋아요 버튼 -->
     {% if request.user.is_authenticated %}
     <form class="like-form p-0" data-article-id="{{ article.pk }}">
       {% csrf_token %}
@@ -79,60 +82,86 @@
       {% endif %}
     </form>
     {% endif %}
+    <!-- 좋아요 수 -->
     <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
       <span class="text-secondary">
         좋아요
       </span>
-      <span id="like-count-{{ article.pk }}" class="ms-2 text-secondary fw-bold">
+      <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
         {{ article.like_users.all|length }}
       </span>
     </div>
+    <!-- 댓글 수 -->
     <div class="d-flex align-items-center justify-content-center p-0 m-0">
       <span class="text-secondary">
         댓글
       </span>
-      <span class="ms-2 text-secondary fw-bold">
+      <span class="ms-2 text-light fw-bold">
         {{ article.comment_set.all.count }}
       </span>
     </div>
   </div>
 
 
-  <div class="card">
-    <div class="card-body">
+  <div class="card bg-dark-secondary" style="border: none;">
+    <div class="card-body bg-dark-secondary">
       <!-- 댓글 목록 -->
       {% if article.comment_set.count > 0 %}
-        <div class="container">
-          {% for comment in article.comment_set.all %}
-            <div class="comment py-2">
-              <div class="small text-muted">
-                {{ comment.user }} {{ comment.created_at|date:'y-m-d H:i' }}
-                {% if request.user == comment.user %}
-                  {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="text-info">Update</button>
-                  </form> {% endcomment %}
-                  <form action="#" method="">
-                    {% csrf_token %}
-                    <button type="submit" class="text-info">Update</button>
-                  </form>
-                  <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="text-danger">Delete</button>
-                  </form>
-                {% endif %}
-              </div>
-              <span style="white-space: pre-line;">{{ comment.content|linebreaksbr }}</span>
+      <div class="container">
+        {% for comment in article.comment_set.all %}
+        <div class="comment py-2">
+          <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <!-- 작성자 -->
+              <span class="text-secondary fw-bold">
+                {{ comment.user }}
+              </span>
+              <!-- 작성일 -->
+              <span class="small text-secondary">
+                {{ comment.created_at|date:'y-m-d H:i' }}
+              </span>
+              <!-- 수정일 -->
+              {% if comment.updated_at %}
+              <span class="small text-secondary">
+                 | {{ comment.updated_at|date:'y-m-d H:i' }}
+              </span>
+              {% endif %}
             </div>
-          {% endfor %}
+            <!-- 수정, 삭제 버튼 -->
+            <div class="d-flex justify-content-end align-items-center">
+              {% if request.user == comment.user %}
+              {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="text-info">Update</button>
+              </form> {% endcomment %}
+              <!-- 수정 -->
+              <form action="#" method="" class="me-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-secondary">Update</button>
+              </form>
+              <!-- 삭제 -->
+              <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-secondary">Delete</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          <!-- 내용 -->
+          <span class="text-light small">
+            {{ comment.content|linebreaksbr }}
+          </span>
         </div>
+        {% endfor %}
+      </div>
       {% endif %}
       <!-- 댓글 작성 -->
       <div class="container my-3">
-        <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="post-form my-3">
+        <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
           {% csrf_token %}
-          <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
-          <button type="submit" class="btn btn-primary">Create</button>
+          <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-secondary text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
+          <button type="submit" class="btn btn-danger fw-bold">Create</button>
         </form>
       </div>
     </div>
@@ -140,35 +169,52 @@
 </div>
 {% endblock %}
 
+
+
 {% block script %}
 <script>
-  const likeForm = document.querySelector('.like-form');
-  likeForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const articleId = event.target.dataset.articleId;
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    axios({
-      url: `/articles/${articleId}/like/`,
-      method: 'post',
-      headers: { 'X-CSRFToken': csrftoken },
+const likeForm = document.querySelector('.like-form');
+likeForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const articleId = event.target.dataset.articleId;
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  axios({
+    url: `/articles/${articleId}/like/`,
+    method: 'post',
+    headers: { 'X-CSRFToken': csrftoken },
+  })
+    .then(res => {
+      const likeCount = res.data.like_count;
+      const liked = res.data.liked;
+      const $likeButton = document.querySelector(`#like-${articleId}`);
+      const $likeCount = document.querySelector(`#like-count-${articleId}`);
+      if (liked) {
+        $likeButton.classList.add('text-danger');
+        $likeButton.innerText ='♥';
+      } else {
+        $likeButton.classList.remove('text-danger');
+        $likeButton.innerText = '♡';
+      }
+      $likeCount.innerText = likeCount;
     })
-      .then(res => {
-        const likeCount = res.data.like_count;
-        const liked = res.data.liked;
-        const $likeButton = document.querySelector(`#like-${articleId}`);
-        const $likeCount = document.querySelector(`#like-count-${articleId}`);
-        if (liked) {
-          $likeButton.classList.add('text-danger');
-          $likeButton.innerText ='♥';
-        } else {
-          $likeButton.classList.remove('text-danger');
-          $likeButton.innerText = '♡';
-        }
-        $likeCount.innerText = likeCount;
-      })
-      .catch(err => console.error(err.response));
-  });
+    .catch(err => console.error(err.response));
+});
 
-  
+
+const $commentCreateForm = document.querySelector('.comment-create-form');
+$commentCreateForm.addEventListener('submit', event =>{
+  event.preventDefault();
+  const articleid = event.target.dataset.articleId;
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  axios({
+    url: `/articles/${articleId}/comments/create/`,
+    method: 'post',
+    headers: { 'X-CSRFToken': csrftoken },
+  })
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => console.error(err.response));
+});
 </script>
 {% endblock %}

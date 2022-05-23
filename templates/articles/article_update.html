@@ -2,23 +2,21 @@
 
 {% block content %}
 <div class="container">
-  <h5 class="my-3 border-bottom pb-2">Article Update</h5>
-  <form action="{% url 'articles:article_update' article.pk %}" method="post" class="post-form my-3">
+  <h2 class="my-3 border-bottom pb-2 text-secondary fw-bold">Article Update</h2>
+  <form method="post" class="post-form my-3">
     {% csrf_token %}
     <!-- 오류 표시 -->
     <!-- 오류 표시 -->
     <div class="form-group my-3">
-      <label for="title" class="form-label">Title</label>
-      <input type="text" name="title" id="title" value="{{ form.title.value|default_if_none:'' }}" class="form-control">
+      <label for="title" class="form-label text-secondary">Title</label>
+      <input type="text" name="title" id="title" value="{{ article_form.title.value|default_if_none:'' }}" class="form-control bg-secondary text-light">
     </div>
     <div class="form-group my-3">
-      <label for="content" class="form-label">Content</label>
-      <textarea type="text" name="content" id="content" rows="10" class="form-control">
-        {{ form.content.value|default_if_none:'' }}
-      </textarea>
+      <label for="content" class="form-label text-secondary">Content</label>
+      <textarea type="text" name="content" id="content" rows="10" class="form-control bg-secondary text-light">{{ article_form.content.value|default_if_none:'' }}</textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-danger fw-bold">Update</button>
   </form>
-  <a href="{% url 'articles:articles' %}" class="btn btn-secondary">Back</a>
+  <a href="{% url 'articles:articles' %}" class="btn btn-secondary fw-bold" style="width: 78.75px;">Back</a>
 </div>
 {% endblock %}

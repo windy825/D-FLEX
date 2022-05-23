@@ -53,20 +53,21 @@ def article_detail(request, article_pk):
 @require_http_methods(['GET', 'POST'])
 def article_update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
-    if request.user == article.user:
-        if request.method == 'POST':
-            form = ArticleForm(request.POST, instance=article)
-            if form.is_valid():
-                form.save()
-                return redirect('articles:article_detail', article.pk)
-        else:
-            form = ArticleForm(instance=article)
+    if request.user != article.user:
+        return redirect('articles:articles')
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('articles:article_detail', article.pk)
     else:
-        redirect('articles:articles')
+        form = ArticleForm(instance=article)
     context = {
+        'article': article,
         'article_form': form
     }
     return render(request, 'articles/article_update.html', context)
+
 
 
 @require_POST

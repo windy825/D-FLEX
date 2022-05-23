@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # 3rd party 
     'django_seed',
 
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
