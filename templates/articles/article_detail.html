@@ -2,78 +2,96 @@
 
 {% block content %}
 <div class="container my-5 bg-dark-secondary">
-  <!-- 게시글 제목 -->
-  <div class="row border-bottom">
-    <h2 class="col text-light">{{ article.title }}</h2>
+  <!-- 제목, 작성일 row -->
+  <div class="row border-bottom p-3">
+    <!-- 제목 col -->
     <div class="col">
-      <span class="bg-light text-muted ms-auto">
+      <h2 class="text-light mb-0">
+        {{ article.title }}
+      </h2>
+    </div>
+    <!-- 작성일 col -->
+    <div class="col d-flex justify-content-end align-items-center">
+      <span class="text-secondary ms-auto">
         {{ article.created_at|date:'y-m-d H:i' }}
       </span>
     </div>
   </div>
-  <span class="text-start">{{ article.user.username }}</span>
-  <!-- 게시글 -->
-  <div class="row my-3">
-    <div>
-      <div class="card bg-dark">
-        <div class="card-body bg-dark">
-          
-          <div class="card-text mb-2">{{ article.content|linebreaks }}</div>
-          <div class="d-flex justify-content-end">
-            <!-- 수정일 -->
-            {% if article.updated_at %}
-            <div class="badge bg-light p-2 text-start mx-3 text-dark">
-              <div class="mb-2">수정일</div>
-              <div>{{ article.updated_at|date:'y-m-d H:i' }}</div>
-            </div>
-            {% endif %}
-            <!-- 작성자, 작성일 -->
-            <div class="badge bg-light text-dark p-2 text-start">
-              <div class="mb-2">{{ article.user.username }}</div>
-              <div>{{ article.created_at|date:'y-m-d H:i' }}</div>
-            </div>
-          </div>
-          <!-- 수정, 삭제 버튼 -->
-          {% if request.user == article.user %}
-          <div class="my-3">
-            <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-sm btn-outline-info">
-              Update
-            </a>
-            <form action="{% url 'articles:article_delete' article.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-danger">Delete</button>
-            </form>
-          </div>
-          {% endif %}
-        </div>
-        <!-- 목록으로 -->
-      </div>
-      <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-outline-secondary fw-bold">Back</a>
+  <!-- 작성자, 수정일 -->
+  <div class="row px-3 py-2">
+    <!-- 작성자 col -->
+    <div class="col">
+      <span class="text-secondary">
+        {{ article.user.username }}
+      </span>
+    </div>
+    <!-- 수정일 col -->
+    <div class="col d-flex justify-content-end align-items-center">
+      {% if article.updated_at %}
+      <span class="text-secondary ms-auto">
+        {{ article.updated_at|date:'y-m-d H:i' }}
+      </span>
+      {% endif %}
     </div>
   </div>
+  <!-- 게시글 row -->
+  <div class="row my-3">
+    <div class="card bg-dark-secondary" style="border: none;">
+      <!-- 내용 -->
+      <div class="card-body bg-dark">
+        <div class="card-text mb-2 text-light">
+          {{ article.content|linebreaks }}
+        </div>
+      </div>
+      <div class="container d-flex justify-content-between align-items-center px-0">
+        <!-- 수정, 삭제 버튼 -->
+        {% if request.user == article.user %}
+        <div class="d-flex justify-content-start my-3">
+          <div class="me-2">
+            <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-secondary text-light p-2 fw-bold">
+              Update
+            </a>
+          </div>
+          <form action="{% url 'articles:article_delete' article.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary p-2 fw-bold">Delete</button>
+          </form>
+        </div>
+        {% endif %}
+        <!-- 목록으로 -->
+        <div>
+          <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-secondary p-2 px-3 fw-bold">Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- 댓글 개수 -->
-
-
   <div class="d-flex border-bottom my-2">
-      {% if request.user.is_authenticated %}
-        <form class="like-form p-0" data-article-id="{{ article.pk }}">
-          {% csrf_token %}
-          {% if user in article.like_users.all %}
-            <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4">♥</button>
-          {% else %}
-            <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4">♡</button>
-          {% endif %}
-        </form>
+    {% if request.user.is_authenticated %}
+    <form class="like-form p-0" data-article-id="{{ article.pk }}">
+      {% csrf_token %}
+      {% if user in article.like_users.all %}
+      <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4">♥</button>
+      {% else %}
+      <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4">♡</button>
       {% endif %}
+    </form>
+    {% endif %}
     <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
-      좋아요 
-      <span id="like-count-{{ article.pk }}" class="ms-2 fw-bold">
+      <span class="text-secondary">
+        좋아요
+      </span>
+      <span id="like-count-{{ article.pk }}" class="ms-2 text-secondary fw-bold">
         {{ article.like_users.all|length }}
       </span>
     </div>
     <div class="d-flex align-items-center justify-content-center p-0 m-0">
-      댓글 
-      <span class="ms-2 fw-bold">
+      <span class="text-secondary">
+        댓글
+      </span>
+      <span class="ms-2 text-secondary fw-bold">
         {{ article.comment_set.all.count }}
       </span>
     </div>
