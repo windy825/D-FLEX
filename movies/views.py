@@ -21,12 +21,15 @@ def movies(request):
 @require_safe
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    review_set = movie.review_set.all()
+    review_set = movie.review_set.all()    
+    genres = movie.genres.strip('[]').replace("'",'').split(',')[:2]
+    
     form = ReviewForm()
     context = {
         'movie': movie,
         'review_set': review_set,
-        'review_form': form
+        'review_form': form,
+        'genres':genres
     }
     return render(request, 'movies/movie_detail.html', context)
 
