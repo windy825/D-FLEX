@@ -6,6 +6,9 @@
   <form method="post" class="post-form my-3">
     {% csrf_token %}
     <!-- 오류 표시 -->
+    {% with form=article_form %}
+      {% include 'errors.html' %}
+    {% endwith %}
     <!-- 오류 표시 -->
     <div class="form-group my-3">
       <label for="title" class="form-label text-secondary">Title</label>

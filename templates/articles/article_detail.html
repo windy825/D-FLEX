@@ -21,9 +21,7 @@
   <div class="row px-3 py-2">
     <!-- 작성자 -->
     <div class="col">
-      <span class="text-secondary">
-        {{ article.user.username }}
-      </span>
+      <a href="{% url 'accounts:profile' user.username %}" class="text-secondary text-decoration-none fw-bold">{{ article.user.username }}</a>
     </div>
     <!-- 수정일 -->
     <div class="col d-flex justify-content-end align-items-center">
@@ -61,7 +59,7 @@
         </div>
         {% endif %}
         <!-- 목록으로 -->
-        <div>
+        <div class="my-3">
           <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-secondary p-2 px-3 fw-bold">Back</a>
         </div>
       </div>
@@ -76,9 +74,9 @@
     <form class="like-form p-0" data-article-id="{{ article.pk }}">
       {% csrf_token %}
       {% if user in article.like_users.all %}
-      <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4">♥</button>
+      <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4"><i class="fa fa-solid fa-heart text-danger"></i></button>
       {% else %}
-      <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4">♡</button>
+      <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4"><i class="fa fa-regular fa-heart text-secondary"></i></button>
       {% endif %}
     </form>
     {% endif %}
@@ -90,6 +88,10 @@
       <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
         {{ article.like_users.all|length }}
       </span>
+    </div>
+    <!-- 댓글 아이콘 -->
+    <div class="d-flex justify-content-center align-items-center me-2">
+      <i class="fa fa-regular fa-comment text-secondary"></i>
     </div>
     <!-- 댓글 수 -->
     <div class="d-flex align-items-center justify-content-center p-0 m-0">
@@ -114,9 +116,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <!-- 작성자 -->
-              <span class="text-secondary fw-bold">
-                {{ comment.user }}
-              </span>
+              <a href="{% url 'accounts:profile' user.username %}" class="text-secondary text-decoration-none fw-bold">{{ article.user.username }}</a>
               <!-- 작성일 -->
               <span class="small text-secondary">
                 {{ comment.created_at|date:'y-m-d H:i' }}
@@ -136,14 +136,15 @@
                 <button type="submit" class="text-info">Update</button>
               </form> {% endcomment %}
               <!-- 수정 -->
-              <form action="#" method="" class="me-2">
+              {% comment %} <form action="#" method="get" class="me-2">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-secondary">Update</button>
-              </form>
+              </form> {% endcomment %}
+              <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm btn-dark text-secondary me-2">Update</a>
               <!-- 삭제 -->
               <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-secondary">Delete</button>
+                <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
               </form>
               {% endif %}
             </div>
@@ -190,10 +191,10 @@ likeForm.addEventListener('submit', event => {
       const $likeCount = document.querySelector(`#like-count-${articleId}`);
       if (liked) {
         $likeButton.classList.add('text-danger');
-        $likeButton.innerText ='♥';
+        $likeButton.innerHTML ='<i class="fa fa-solid fa-heart text-danger"></i>';
       } else {
         $likeButton.classList.remove('text-danger');
-        $likeButton.innerText = '♡';
+        $likeButton.innerHTML = '<i class="fa fa-regular fa-heart text-secondary"></i>';
       }
       $likeCount.innerText = likeCount;
     })
@@ -201,10 +202,10 @@ likeForm.addEventListener('submit', event => {
 });
 
 
-const $commentCreateForm = document.querySelector('.comment-create-form');
+{% comment %} const $commentCreateForm = document.querySelector('.comment-create-form');
 $commentCreateForm.addEventListener('submit', event =>{
   event.preventDefault();
-  const articleid = event.target.dataset.articleId;
+  const articleId = event.target.dataset.articleId;
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   axios({
     url: `/articles/${articleId}/comments/create/`,
@@ -215,6 +216,6 @@ $commentCreateForm.addEventListener('submit', event =>{
       console.log(res.data);
     })
     .catch(err => console.error(err.response));
-});
+}); {% endcomment %}
 </script>
 {% endblock %}

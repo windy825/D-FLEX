@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2 class="my-3 border-bottom pb-2 text-secondary fw-bold">Comment Update</h2>
+  <form method="post" class="post-form my-3">
+    {% csrf_token %}
+    <!-- 오류 표시 -->
+    <!-- 오류 표시 -->
+    <div class="form-group my-3">
+      <label for="content" class="form-label text-secondary">Content</label>
+      <textarea type="text" name="content" id="content" rows="10" class="form-control bg-secondary text-light">{{ comment_form.content.value|default_if_none:'' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-danger fw-bold">Update</button>
+  </form>
+  <a href="{% url 'articles:article_detail' article.pk %}" class="btn btn-secondary fw-bold" style="width: 78.75px;">Back</a>
+</div>
+{% endblock %}

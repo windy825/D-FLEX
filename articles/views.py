@@ -1,10 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from articles.forms import ArticleForm, CommentForm
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
 from django.http import JsonResponse
 
-
+from .forms import ArticleForm, CommentForm
 from .models import Article, Comment
 
 
@@ -119,16 +118,38 @@ def comment_create(request, article_pk):
 # def comment_update(request, article_pk, comment_pk):
 #     article = get_object_or_404(Article, pk=article_pk)
 #     comment = get_object_or_404(Comment, pk=comment_pk)
-#     if request.user == comment.user:
-        
-#         form = CommentForm(request.POST, instance=comment)
-#         if form.is_valid():
-#             form.save()
-#             context = {
-                
-#             }
-#             return JsonResponse(context)
-#     return redirect('accounts:login')
+#     if request.user != comment.user:
+#         return redirect('articles:article_detail', article_pk)
+#     form = CommentForm(request.POST, instance=comment)
+#     if form.is_valid():
+#         form.save()
+#         context = {
+            
+#         }
+#         return JsonResponse(context)
+
+
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def comment_update(request, article_pk, comment_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    if request.user != comment.user:
+        return redirect('articles:article_detail', article_pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('articles:article_detail', article_pk)
+    else:
+        form = CommentForm(instance=comment)
+    context = {
+        'article': article,
+        'comment': comment,
+        'comment_form': form,
+    }
+    return render(request, 'articles/comment_update.html', context)
 
 
 
