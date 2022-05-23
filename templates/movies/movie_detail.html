@@ -21,51 +21,39 @@
 				{% comment %} <p class="disc">{{ movie.overview }}</p> {% endcomment %}
 				<a href="#" target="_blank">Read More</a>
 			<div class="social-btn">
-        <!-- WATCH TRAILER-->
-				<button>
-					<i class="fas fa-play"></i> SEE TRAILER
-				</button>
-				<!-- GET-->
-				<button>
-					<i class="fas fa-download"></i> DOWNLOAD
+				<button class='post_btn'>
+          <i class="fa-solid fa-comments"></i> Community
 				</button>
 				<!--USERS RATINGS-->
-				<button>
-					<i class="fas fa-thumbs-up"></i> 97%
+				<button class='post_btn'>
+					<i class="fas fa-thumbs-up"></i> like it
 				</button>
-				<!--BOOKMARK-->
-				<button>
-					<i class="fas fa-star"></i>
+        <button class='post_btn'>
+					<i class="fa-solid fa-basket-shopping"></i> get it
 				</button>
 			</div>	
 			</div>
 		</div>
 		<div class="card_right">
 			<div class="img_container">
-				<img src="{{ movie.poster_path }}" alt="">
+				<img src="{{ movie.poster_path }}" alt="포스터">
 				</div>
 				<div class="play_btn">
-					<a href="https://www.imdb.com/title/tt4912910/" target="_blank">
+					<a href="{{ youtube }}" target="_blank">
 						<i class="fas fa-play-circle"></i>
 					</a>
 				</div>
-			</div>
-		</div>
-	</div>
-
+		  </div>
+    </div>
+  </div>
+  <div class="main_card">
+    <h2>회전목마~~</h2>
+  </div>
+</div>
 
 
 <!-- FOLLOW -->
-<a class="Follow" href="{% url 'movies:for_you' movie.pk %}" target="blank_"></a>
-
-
-
-<form action="{% url 'movies:review_create' movie.pk %}" method="post">
-  {% csrf_token %}
-  {{ review_form }}
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
+<a class="Follow" href="{% url 'movies:for_you' movie.pk %}"></a>
 
 
 
@@ -78,19 +66,19 @@
   
   .main_card {
     color: #fff;
-    width: 80vw;
+    width: 100%;
     height: 390px;
     margin: 50px auto;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    max-width: 770px;
+    max-width: 95%;
     background: #00C9FF; 
-    background: -webkit-linear-gradient(to right, #92FE9D, #00C9FF);
-    background: -webkit-gradient(linear, left top, right top, from(#92FE9D), to(#00C9FF));
-    background: -webkit-linear-gradient(left, #92FE9D, #00C9FF);
-    background: -o-linear-gradient(left, #92FE9D, #00C9FF);
-    background: linear-gradient(to right, #92FE9D, #00C9FF); 
+    background: -webkit-linear-gradient(to right, #808080, #404040);
+    background: -webkit-gradient(linear, left top, right top, from(#808080), to(#404040));
+    background: -webkit-linear-gradient(left, #808080, #404040);
+    background: -o-linear-gradient(left, #808080, #404040);
+    background: linear-gradient(to right, #808080, #404040); 
     -webkit-box-shadow: 0 0 40px rgba(0,0,0,0.3); 
             box-shadow: 0 0 40px rgba(0,0,0,0.3);
   }
@@ -99,6 +87,7 @@
     width: 90%;
   }
   
+
   .card_datails {
     width: 90%;
     padding: 30px;
@@ -125,6 +114,7 @@
             justify-content: space-between;
   }
   
+  
   .PG, .year, .genre, .time {
     color: fff;
     padding: 10px;
@@ -133,7 +123,7 @@
   }
   
   .PG {
-    background: #92FE9D;
+    background: #ffffff;
     -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.1);
             box-shadow: 0 0 50px rgba(0,0,0,0.1);
     -webkit-transition: 300ms ease-in-out;
@@ -151,15 +141,15 @@
   .social-btn {
     margin-left: -10px;
   }
-  button {
-    color: #fff;
+  .post_btn {
+    color: white;
     border: none;
-    padding: 20px;
+    padding: 10px;
     outline: none;
     font-size: 12px;
     margin-top: 30px;
     margin-left: 10px;
-    background: #92FE9D;
+    background: #DB3838;
     border-radius: 12px;
     -webkit-box-shadow: 0 0 20px rgba(0,0,0,0.2);
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
@@ -178,19 +168,18 @@
     margin: -394px auto;
     position: relative;
     text-align: center;
-    background: rgba(0, 244, 170,0.4);
     box-shadow: 0 0 50px rgba(0,0,0,0.2);
   }
   .fa-play-circle {
-    color: #255;
-    font-size: 160px;
-    margin-top: 110px;
-    {% comment %} -webkit-animation: bounce 1.0s -0.4s infinite;
-            animation: bounce 1.0s -0.4s infinite; {% endcomment %}
+    color: #DB3838;
+    font-size: 50px;
+    margin-top: 180px;
+    -webkit-animation: bounce 1.0s -0.4s infinite;
+            animation: bounce 1.0s -0.4s infinite;
   }
   
   .fa-play-circle:hover {
-    color: aqua;
+    color: #DB3838;
     animation: bounce 0.4s infinite;
   }
   @-webkit-keyframes bounce {
@@ -223,8 +212,8 @@
   
   
   
-  /*  FOLLOW*/
-  .Follow {	  background:url("https://user-images.githubusercontent.com/89068148/169769128-9e6d8773-ff93-4e66-8da5-4b953a6a3a25.jpeg")no-repeat center / contain;
+
+  .Follow { background:url("https://user-images.githubusercontent.com/89068148/169769128-9e6d8773-ff93-4e66-8da5-4b953a6a3a25.jpeg")no-repeat center / contain;
     width: 50px;
     height: 50px;
     bottom: 9px;

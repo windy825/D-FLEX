@@ -6,7 +6,6 @@ from movies.forms import ReviewForm
 from .models import Movie, Review
 
 
-
 # path('', views.movies),
 @require_safe
 def movies(request):
@@ -29,7 +28,8 @@ def movie_detail(request, movie_pk):
         'movie': movie,
         'review_set': review_set,
         'review_form': form,
-        'genres':genres
+        'genres':genres,
+        'youtube': f'https://www.youtube.com/results?search_query={movie.title}'
     }
     return render(request, 'movies/movie_detail.html', context)
 
