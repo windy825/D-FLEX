@@ -12,7 +12,7 @@
       <textarea type="text" name="content" id="content" rows="10" class="form-control bg-secondary text-light">{{ comment_form.content.value|default_if_none:'' }}</textarea>
     </div>
     <button type="submit" class="btn btn-danger fw-bold">Update</button>
+    <a href="{% url 'articles:article_detail' article.pk %}" class="btn btn-secondary fw-bold" style="width: 78.75px;">Back</a>
   </form>
-  <a href="{% url 'articles:article_detail' article.pk %}" class="btn btn-secondary fw-bold" style="width: 78.75px;">Back</a>
 </div>
 {% endblock %}
