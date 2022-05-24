@@ -9,7 +9,7 @@ from .models import Movie, Review
 # path('', views.movies),
 @require_safe
 def movies(request):
-    movies = Movie.objects.all()
+    movies = Movie.objects.all().order_by('-release_date')
     context = {
         'movies': movies
     }
