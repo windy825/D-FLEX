@@ -36,7 +36,7 @@ def movie_detail(request, movie_pk):
     # q = movie.title + ' 영화',
     # order = "relevance",
     # part = "snippet",
-    # maxResults = 20
+    # maxResults = 10
     # ).execute()['items']
 
     # video_list = []
@@ -137,8 +137,8 @@ def review_create(request, movie_pk):
 
 # path('<int:movie_pk>/review/<int:review_pk>/update/', views.review_update),
 # @login_required
-# def review_update(request, movie_pk, review_pk):
-#     pass
+def review_update(request, movie_pk, review_pk):
+    pass
 
 
 # path('<int:movie_pk>/review/<int:review_pk>/delete/', views.review_delete),

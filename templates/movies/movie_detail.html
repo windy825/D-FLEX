@@ -68,7 +68,7 @@
               <!-- 수정, 삭제 버튼 -->
               <div class="d-flex justify-content-end align-items-center">
                 {% if request.user == review.user %}
-                <a href="{% url 'review:comment_update' movie.pk review.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
+                <a href="{% url 'movies:review_update' movie.pk review.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
                 <!-- 삭제 -->
                 <!-- Button trigger modal -->
                 <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
@@ -115,25 +115,18 @@
     </div>
   </div>
   <div class="container-xxl my-3">
-    <form action="{% url 'movies:review_create' movie.pk %}" method="post">
-      {% csrf_token %}
-      {{ review_form }}
-      <button type="submit"></button>
-    </form>
-
-
-    {% comment %} <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
+    <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
       {% csrf_token %}
       <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
       <select class="form-select" name="rating"  aria-label="here">
-        <option selected>평점을 매기세요</option>
+        <option selected>별점을 매기세요</option>
         <option value=1>★☆☆☆☆</option>
         <option value=2>★★☆☆☆</option>
         <option value=3>★★★☆☆</option>
         <option value=4>★★★★☆</option>
         <option value=5>★★★★★</option>
       </select>
-      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button> {% endcomment %}
+      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button>
     </form>
   </div>
 </div>
