@@ -1,6 +1,295 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="detail-wrap container-fluid">
+  <!-- 정보 -->
+  <div class="movie-info container-xxl mb-4">
+    <!-- 제목 -->
+    <div class="border-bottom p-3">
+      <h1 class="text-light fw-bold mb-0">
+        {{ movie.title }}
+      </h1>
+    </div>
+    <!-- 장르 -->
+    <div class="px-3 pt-2 mb-4">
+      <div class="">
+        <span class="text-secondary text-decoration-none fw-bold">장르1 장르2 장르3</span>
+      </div>
+    </div>
+    <!-- 줄거리, 버튼, 포스터 -->
+    <div class="container-fluid d-flex justify-content-between">
+      <div class="container-fluid ps-0 pe-5 me-5">
+        <div class="mb-5">
+          <span class="text-light">{{ movie.overview }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <button class="btn btn-danger me-2" style="width: 6rem;"><i class="fa fa-solid fa-heart text-light"></i></button>
+            <button class="btn btn-secondary me-2" style="width: 6rem;">Review</button>
+            <button class="btn btn-outline-light" style="width: 6rem;"><i class="fa-solid fa-basket-shopping"></i></button>
+          </div>
+          <a href="{% url 'movies:movies' %}" class="btn btn-dark" style="width: 6rem;">Back</a>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <img src="{{ movie.poster_path }}" alt="" style="height: 50vh; border-radius: 2%;">
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container-xxl">
+    <div class="card bg-dark" style="border: none;">
+      <div class="card-body bg-dark">
+        <!-- 댓글 목록 -->
+        {% if movie.review_set.count > 0 %}
+        <div class="container">
+          {% for review in movie.review_set.all %}
+          <div class="comment py-2">
+            <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <!-- 작성자 -->
+                <a href="{% url 'accounts:profile' review.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ review.user.username }}</a>
+                <!-- 작성일 -->
+                <span class="small text-secondary">
+                  {{ review.created_at|date:'y-m-d H:i' }}
+                </span>
+                <!-- 수정일 -->
+                {% if review.updated_at %}
+                <span class="small text-secondary">
+                   | {{ review.updated_at|date:'y-m-d H:i' }}
+                </span>
+                {% endif %}
+              </div>
+              <!-- 수정, 삭제 버튼 -->
+              <div class="d-flex justify-content-end align-items-center">
+                {% if request.user == review.user %}
+                <a href="{% url 'review:comment_update' movie.pk review.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
+                <!-- 삭제 -->
+                <!-- Button trigger modal -->
+                <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
+                  Delete
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="commentDeleteButton" tabindex="-1" aria-labelledby="commentDeleteButtonLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                      <div class="modal-header" style="border: none;">
+                        <h5 class="modal-title text-light" id="commentDeleteButtonLabel">Delete</h5>
+                        <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-light">
+                        Are you sure you want to delete it?
+                      </div>
+                      <div class="modal-footer" style="border: none;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form action="{% url 'movies:review_delete' movie.pk review.pk %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% comment %} <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
+                </form> {% endcomment %}
+                {% endif %}
+              </div>
+            </div>
+            <!-- 내용 -->
+            <span class="text-light small">
+              {{ review.content|linebreaksbr }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 댓글 작성 -->
+      </div>
+    </div>
+  </div>
+  <div class="container-xxl my-3">
+    <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
+      {% csrf_token %}
+      <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
+      <select class="form-select" aria-label="Default select example">
+        <option selected>평점을 매기세요</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+        <option value="4">Three</option>
+        <option value="5">Three</option>
+      </select>
+      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button>
+    </form>
+  </div>
+
+</div>
+
+
+<style>
+.detail-wrap {
+  background-image: linear-gradient(rgb(20, 20, 20), transparent, rgb(20, 20, 20)), url("{{ movie.poster_path }}");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 0.90)), url("{{ movie.poster_path }}");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 90vh;
+}
+</style>
+{% endblock %}
+
+
+
+
+<!-- 좋아요 버튼, 좋아요 수, 댓글 수 -->
+<div class="d-flex border-bottom my-2">
+  <!-- 좋아요 버튼 -->
+  {% if request.user.is_authenticated %}
+  <form class="like-form p-0" data-article-id="{{ article.pk }}">
+    {% csrf_token %}
+    {% if user in article.like_users.all %}
+    <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4"><i class="fa fa-solid fa-heart text-danger"></i></button>
+    {% else %}
+    <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4"><i class="fa fa-regular fa-heart text-secondary"></i></button>
+    {% endif %}
+  </form>
+  {% endif %}
+  <!-- 좋아요 수 -->
+  <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
+    <span class="text-secondary">
+      좋아요
+    </span>
+    <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
+      {{ article.like_users.all|length }}
+    </span>
+  </div>
+  <!-- 댓글 아이콘 -->
+  <div class="d-flex justify-content-center align-items-center me-2">
+    <i class="fa fa-regular fa-comment text-secondary"></i>
+  </div>
+  <!-- 댓글 수 -->
+  <div class="d-flex align-items-center justify-content-center p-0 m-0">
+    <span class="text-secondary">
+      댓글
+    </span>
+    <span class="ms-2 text-light fw-bold">
+      {{ article.comment_set.all.count }}
+    </span>
+  </div>
+</div>
+
+
+<div class="card bg-dark" style="border: none;">
+  <div class="card-body bg-dark">
+    <!-- 댓글 목록 -->
+    {% if article.comment_set.count > 0 %}
+    <div class="container">
+      {% for comment in article.comment_set.all %}
+      <div class="comment py-2">
+        <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <!-- 작성자 -->
+            <a href="{% url 'accounts:profile' comment.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ comment.user.username }}</a>
+            <!-- 작성일 -->
+            <span class="small text-secondary">
+              {{ comment.created_at|date:'y-m-d H:i' }}
+            </span>
+            <!-- 수정일 -->
+            {% if comment.updated_at %}
+            <span class="small text-secondary">
+               | {{ comment.updated_at|date:'y-m-d H:i' }}
+            </span>
+            {% endif %}
+          </div>
+          <!-- 수정, 삭제 버튼 -->
+          <div class="d-flex justify-content-end align-items-center">
+            {% if request.user == comment.user %}
+            {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="text-info">Update</button>
+            </form> {% endcomment %}
+            <!-- 수정 -->
+            {% comment %} <form action="#" method="get" class="me-2">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-secondary">Update</button>
+            </form> {% endcomment %}
+            <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
+            <!-- 삭제 -->
+            <!-- Button trigger modal -->
+            <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
+              Delete
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="commentDeleteButton" tabindex="-1" aria-labelledby="commentDeleteButtonLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content bg-dark">
+                  <div class="modal-header" style="border: none;">
+                    <h5 class="modal-title text-light" id="commentDeleteButtonLabel">Delete</h5>
+                    <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-light">
+                    Are you sure you want to delete it?
+                  </div>
+                  <div class="modal-footer" style="border: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
+            </form> {% endcomment %}
+            {% endif %}
+          </div>
+        </div>
+        <!-- 내용 -->
+        <span class="text-light small">
+          {{ comment.content|linebreaksbr }}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 댓글 작성 -->
+    <div class="container my-3">
+      <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
+        {% csrf_token %}
+        <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
+        <button type="submit" class="btn btn-danger fw-bold">Create</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div class="wrapper">
 	<div class="main_card">
@@ -298,6 +587,3 @@
       }
   }
 </style>
-
-
-{% endblock %}
