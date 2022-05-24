@@ -1,74 +1,60 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-black mb-3">
   <div class="container-fluid">
-    {% comment %} <router-link :to="{ name: 'home' }" class="nav-link text-light fw-bold fs-4">Home</router-link> {% endcomment %}
-    <a href="{% url 'home:home' %}" class="navbar-brand nav-link text-danger fw-bold fs-4">Home</a>
+    
+    <a href="{% url 'home:home' %}" class="navbar-brand nav-link text-danger fw-bold fs-4" style="font-family: 'Anton', sans-serif;">D-FLEX</a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        {% comment %} <li v-if="!isLoggedIn" class="nav-item">
-          <router-link :to="{ name: 'login' }" class="nav-link">Login</router-link>
-        </li>
-        <li v-if="!isLoggedIn" class="nav-item">
-          <router-link :to="{ name: 'signup' }" class="nav-link">Signup</router-link>
-        </li>
-        <li v-if="isLoggedIn" class="nav-item">
-          <router-link :to="{ name: 'profile', params: { username } }" class="nav-link">
-            {{ currentUser.username }}'s page
-          </router-link>
-        </li>
-        <li v-if="isLoggedIn" class="nav-item">
-          <router-link :to="{ name: 'logout' }" class="nav-link">Logout</router-link>
-        </li> {% endcomment %}
-
-
         {% if user.is_authenticated %}
-        <!-- Profile -->
-        <li class="nav-item">
-          <a href="{% url 'accounts:profile' user.username %}" class="nav-link">{{ user.username }}'s Profile</a>
-        </li>
-        <!-- Logout -->
-        <li class="nav-item">
-          <!-- Button trigger modal -->
-          <button type="submit" class="bg-dark-secondary nav-link" style="border: none;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Logout
-          </button>
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content bg-dark">
-                <div class="modal-header" style="border: none;">
-                  <h5 class="modal-title text-light" id="exampleModalLabel">Logout</h5>
-                  <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-light">
-                  Are you sure you want to log out?
-                </div>
-                <div class="modal-footer" style="border: none;">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <form action="{% url 'accounts:logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                  </form>
+          <!-- Profile -->
+          <li class="nav-item">
+            <a href="{% url 'accounts:profile' user.username %}" class="nav-link">{{ user.username }}'s Profile</a>
+          </li>
+          <!-- Logout -->
+          <li class="nav-item">
+            <!-- Button trigger modal -->
+            <button type="submit" class="bg-dark-secondary nav-link" style="border: none;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Logout
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content bg-dark">
+                  <div class="modal-header" style="border: none;">
+                    <h5 class="modal-title text-light" id="exampleModalLabel">Logout</h5>
+                    <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-light">
+                    Are you sure you want to log out?
+                  </div>
+                  <div class="modal-footer" style="border: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'accounts:logout' %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Logout</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {% comment %} <form action="{% url 'accounts:logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="bg-dark-secondary nav-link" style="border: none;">Logout</button>
-          </form> {% endcomment %}
-        </li>
+            {% comment %} <form action="{% url 'accounts:logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="bg-dark-secondary nav-link" style="border: none;">Logout</button>
+            </form> {% endcomment %}
+          </li>
         {% else %}
-        <!-- Login -->
-        <li class="nav-item">
-          <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
-        </li>
-        <!-- Signup -->
-        <li class="nav-item">
-          <a href="{% url 'accounts:signup' %}" class="nav-link">Signup</a>
-        </li>
+          <!-- Login -->
+          <li class="nav-item">
+            <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
+          </li>
+          <!-- Signup -->
+          <li class="nav-item">
+            <a href="{% url 'accounts:signup' %}" class="nav-link">Signup</a>
+          </li>
         {% endif %}
       </ul>
     </div>

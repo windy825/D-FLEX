@@ -22,31 +22,30 @@ def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     review_set = movie.review_set.all()    
     genres = movie.genres.strip('[]').replace("'",'').split(',')[:3]
-    movie.overview = movie.overview[:300] + '. . .'
+    movie.overview = movie.overview
     form = ReviewForm()
 
     # 영상 리스트 by youtube api
-    # from googleapiclient.discovery import build
-    # DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
-    # YOUTUBE_API_SERVICE_NAME="youtube"
-    # YOUTUBE_API_VERSION="v3"
-    # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    from googleapiclient.discovery import build
+    DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
+    YOUTUBE_API_SERVICE_NAME="youtube"
+    YOUTUBE_API_VERSION="v3"
+    youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-    # search_response_data = youtube.search().list(
-    # q = movie.title + ' 영화',
-    # order = "relevance",
-    # part = "snippet",
-    # maxResults = 20
-    # ).execute()['items']
+    search_response_data = youtube.search().list(
+    q = movie.title + ' 영화',
+    order = "relevance",
+    part = "snippet",
+    maxResults = 20
+    ).execute()['items']
 
-    # video_list = []
-    # for item in search_response_data:
-    #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-    #     title = item['snippet']['title']
-    #     date = item['snippet']['publishedAt']
-    #     video_list.append({'video':video, 'title':title, 'date':date})
+    video_list = []
+    for item in search_response_data:
+        video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+        title = item['snippet']['title']
+        date = item['snippet']['publishedAt']
+        video_list.append({'video':video, 'title':title, 'date':date})
 
-    # 이미지 크롤링 naver api >> 영화사진
     import os
     import sys
     import urllib.request
@@ -73,7 +72,7 @@ def movie_detail(request, movie_pk):
             })
    
     # 감독 정보 이미지 크롤링
-    encText = urllib.parse.quote(movie.director + '감독')
+    encText = urllib.parse.quote(movie.director+' 감독')
     url = "https://openapi.naver.com/v1/search/image?query=" + encText
     request1 = urllib.request.Request(url)
     request1.add_header("X-Naver-Client-Id",client_id)
@@ -83,15 +82,14 @@ def movie_detail(request, movie_pk):
     response_body = response.read()
     answer = response_body.decode('utf-8')
     answer = json.loads(answer)
-
-    img_director = answer['items'][0]['thumbnail']
+    img_director = answer['items'][0]['thumbnail'] if answer['items'] else []
 
 
     # 배우정보 크롤링
     img_actors = []
     for actor in movie.actors.strip('[]').split(','):
-        actor = actor.strip("'")
-        encText = urllib.parse.quote(actor + '배우')
+        actor = actor.strip("''")
+        encText = urllib.parse.quote(actor)
         url = "https://openapi.naver.com/v1/search/image?query=" + encText
         request1 = urllib.request.Request(url)
         request1.add_header("X-Naver-Client-Id",client_id)
@@ -101,13 +99,13 @@ def movie_detail(request, movie_pk):
         response_body = response.read()
         answer = response_body.decode('utf-8')
         answer = json.loads(answer)
-
+        answer = answer["items"][0]['thumbnail'] if answer['items'] else []
+        
         img_actors.append({
-            'name':actor.strip("'"),
-            'img':answer['items'][0]['thumbnail'],
+            'name':actor,
+            'img':answer,
         })
 
-    print(img_movies)
 
 
     context = {
@@ -115,8 +113,8 @@ def movie_detail(request, movie_pk):
         'review_set': review_set,
         'review_form': form,
         'genres':genres,
-        'search_response_data':[],
-        # 'video_list':video_list,
+        'search_response_data':search_response_data,
+        'video_list':video_list,
         'img_movies_first':img_movies[0],
         'img_movies':img_movies[1:],
         'img_director':img_director,

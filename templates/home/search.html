@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<div class="container mb-5" style="width:900px;">
+    <form action="{% url 'home:search' %}" method='POST'  class="d-flex" role="search">
+        {% csrf_token %}
+        <input class="form-control p-4 bg-white me-2" name='search' type="search" placeholder= "{{ target }}" aria-label="Search">
+        <button class="btn btn-danger fw-bold" type="submit">Search</button>
+    </form>
+</div>
+
+
+<div style="background-color:gray;">
+    <hr>
+    <h1>[일치하는 영화 제목]</h1>
+    {% if movies %}
+        {% for movie in movies %}
+        <br><br>
+        <h4>{{ movie.title }}</h4>
+        {{ movie.overview }}
+        
+        {% endfor %}
+    {% else %}
+        <h4>일치하는 대상이 없습니다.</h4>
+    {% endif %}
+    
+    <hr>
+
+    <h1>[일치하는 게시글 제목 or 게시글 내용]</h1>
+    {% if articles %}
+        {% for article in articles %}
+        {{ article.title }}<br>
+        {{ article.content }}
+        {% endfor %}
+    {% else %}
+        <h4>일치하는 대상이 없습니다.</h4>
+    {% endif %}
+    <hr>
+
+    <h1>[일치하는 사용자 명]</h1>
+    {% if users %}
+        {% for user in users %}
+        {{ user.username }}
+        {% endfor %}
+    {% else %}
+        <h4>일치하는 대상이 없습니다.</h4>
+    {% endif %}
+    <hr>
+</div>
+
+
+{% endblock content %}
