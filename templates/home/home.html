@@ -1,19 +1,17 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div style="position: fixed; z-index: -99; width: 100%; height: 100%">
   <iframe  frameborder="0" height="100%" width="100%"
-  src="https://www.youtube.com/embed/gNtJ4HdMavo?amp;playlist=gNtJ4HdMavo&loop=1&mute=1&autoplay=1&rel=0&controls=0&showinfo=0&modestbranding=1&start=20" 
+  src='https://www.youtube.com/embed/gNtJ4HdMavo?amp;playlist=gNtJ4HdMavo&loop=1&mute=1&autoplay=1&rel=0&controls=0&showinfo=0&modestbranding=1&start=20'
   allowfullscreen>
   </iframe>
 </div>
 
-
 <div class="container">
-  <h1 class="text-center " style="font-family: 'Anton', sans-serif; color:white; font-size:150px; color:red; margin-top:250px;">D-FLEX</h1>
+  <h1 class="text-center " style="font-family: 'Anton', sans-serif; color:white; font-size:180px; color:red; margin-top:300px;">D-FLEX</h1>
   
-  <div class="container mb-5" style="width:900px;">
-    <form action="{% url 'home:search' %}" method='POST'  class="d-flex" role="search">
+  <div class="container mb-5" style="width:800px;">
+    <form action="{% url 'home:search' %}" method='POST' class="d-flex" role="search">
       {% csrf_token %}
       <input class="form-control p-4 bg-white me-2" name='search' type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-danger fw-bold" type="submit">Search</button>

@@ -13,7 +13,9 @@
     <!-- 장르 -->
     <div class="px-3 pt-2 mb-4">
       <div class="">
-        <span class="text-secondary text-decoration-none fw-bold">장르1 장르2 장르3</span>
+        <span class="text-secondary text-decoration-none fw-bold">
+          {% for genre in genres %}{{ genre }}{% endfor %}
+        </span>
       </div>
     </div>
     <!-- 줄거리, 버튼, 포스터 -->
