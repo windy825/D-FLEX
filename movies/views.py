@@ -26,25 +26,25 @@ def movie_detail(request, movie_pk):
     form = ReviewForm()
 
     # 영상 리스트 by youtube api
-    from googleapiclient.discovery import build
-    DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
-    YOUTUBE_API_SERVICE_NAME="youtube"
-    YOUTUBE_API_VERSION="v3"
-    youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    # from googleapiclient.discovery import build
+    # DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
+    # YOUTUBE_API_SERVICE_NAME="youtube"
+    # YOUTUBE_API_VERSION="v3"
+    # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-    search_response_data = youtube.search().list(
-    q = movie.title + ' 영화',
-    order = "relevance",
-    part = "snippet",
-    maxResults = 20
-    ).execute()['items']
+    # search_response_data = youtube.search().list(
+    # q = movie.title + ' 영화',
+    # order = "relevance",
+    # part = "snippet",
+    # maxResults = 20
+    # ).execute()['items']
 
-    video_list = []
-    for item in search_response_data:
-        video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-        title = item['snippet']['title']
-        date = item['snippet']['publishedAt']
-        video_list.append({'video':video, 'title':title, 'date':date})
+    # video_list = []
+    # for item in search_response_data:
+    #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+    #     title = item['snippet']['title']
+    #     date = item['snippet']['publishedAt']
+    #     video_list.append({'video':video, 'title':title, 'date':date})
 
     import os
     import sys
@@ -108,12 +108,10 @@ def movie_detail(request, movie_pk):
 
     context = {
         'movie': movie,
-        'review_set': review_set,
         'review_form': form,
-
         'genres':genres,
-        'search_response_data':search_response_data,
-        'video_list':video_list,
+        'search_response_data':[],
+        # 'video_list':video_list,
         'img_movies_first':img_movies[0],
         'img_movies':img_movies[1:],
         'img_director':img_director,

@@ -56,12 +56,12 @@
                 <a href="{% url 'accounts:profile' review.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ review.user.username }}</a>
                 <!-- 작성일 -->
                 <span class="small text-secondary">
-                  {{ review.created_at|date:'y-m-d H:i' }}
+                  {{ review.created_at}}
                 </span>
                 <!-- 수정일 -->
                 {% if review.updated_at %}
                 <span class="small text-secondary">
-                   | {{ review.updated_at|date:'y-m-d H:i' }}
+                   | {{ review.updated_at}}
                 </span>
                 {% endif %}
               </div>
