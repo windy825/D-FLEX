@@ -20,7 +20,7 @@ def movies(request):
 @require_safe
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    review_set = movie.review_set.all()    
+    review_set = movie.review_set    
     genres = movie.genres.strip('[]').replace("'",'').split(',')[:3]
     movie.overview = movie.overview
     form = ReviewForm()
@@ -106,12 +106,11 @@ def movie_detail(request, movie_pk):
             'img':answer,
         })
 
-
-
     context = {
         'movie': movie,
         'review_set': review_set,
         'review_form': form,
+
         'genres':genres,
         'search_response_data':search_response_data,
         'video_list':video_list,

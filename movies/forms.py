@@ -10,19 +10,20 @@ class ReviewForm(forms.ModelForm):
         (4, '★★★★☆'),
         (5, '★★★★★')
     ]
+
     rating = forms.IntegerField(
-        label='별점',
+        label='별 점',
         widget=forms.Select(
             choices = CHOICES,
         )
     )
 
     content = forms.CharField(
-        label='리뷰',
+        label='리뷰를 작성해 보세요',
         widget=forms.Textarea()
         
     )
 
     class Meta:
         model = Review
-        fields = ['content', 'rating']
+        fields = ('content', 'rating')

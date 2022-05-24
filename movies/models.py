@@ -14,6 +14,10 @@ class Movie(models.Model):
     release_date = models.DateField()
     adult = models.BooleanField()
 
+    def __str__(self):
+        return self.title
+
+
 
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -22,3 +26,6 @@ class Review(models.Model):
     rating = models.IntegerField()
     created_at = models.DateField(auto_now=False, auto_now_add=True)
     updated_at = models.DateField(auto_now=True, auto_now_add=False)
+
+    def __str__(self):
+        return self.title

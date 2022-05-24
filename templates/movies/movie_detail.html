@@ -115,21 +115,27 @@
     </div>
   </div>
   <div class="container-xxl my-3">
-    <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
+    <form action="{% url 'movies:review_create' movie.pk %}" method="post">
+      {% csrf_token %}
+      {{ review_form }}
+      <button type="submit"></button>
+    </form>
+
+
+    {% comment %} <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
       {% csrf_token %}
       <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
-      <select class="form-select" aria-label="Default select example">
+      <select class="form-select" name="rating"  aria-label="here">
         <option selected>평점을 매기세요</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-        <option value="4">Three</option>
-        <option value="5">Three</option>
+        <option value=1>★☆☆☆☆</option>
+        <option value=2>★★☆☆☆</option>
+        <option value=3>★★★☆☆</option>
+        <option value=4>★★★★☆</option>
+        <option value=5>★★★★★</option>
       </select>
-      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button>
+      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button> {% endcomment %}
     </form>
   </div>
-
 </div>
 
 
