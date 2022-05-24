@@ -8,7 +8,9 @@
 			<div class="card_datails">
 				<h1>{{ movie.title }}</h1>
 				<div class="card_cat">
-					<p class="PG">PG - 13</p>
+					<p class="PG" style="color:red;">
+            {{ movie.popularity }} p
+          </p>
 					<p class="year">{{ movie.release_date }}</p>
 					<p class="genre">
             {% for genre in genres %}
@@ -38,21 +40,82 @@
 		<div  class="card_right">
 			<img src="{{ movie.poster_path }}"style="max-width:100%; max-height:100%;" alt="포스터">
 			<div class="play_btn">
-				<a href="{{ youtube }}" target="_blank">
-					<i class="fas fa-play-circle"></i>
-				</a>
+					<i class="fas fa-play-circle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
 			</div>
 	  </div>
   </div>
 
+  <dib class="main_card">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{{ img_movies_first.thumbnail }}" class="d-block w-100" alt="...">
+        </div>
+        {% for img in img_movies %}
+          <div class="carousel-item">
+            <img src="{{ img.thumbnail }}" class="d-block w-100" alt="...">
+          </div>
+        {% endfor %}
+        
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
 
   <div class="main_card">
-    <h2>회전목마~~</h2>
+    <div>
+      <p class="PG" style="color:red;">{{ movie.director }} (감독)</p>
+      <img src="{{ img_director }}" alt="이미지">
+    </div>
+    {% for actor in img_actors %}
+      <div>
+        <p class="PG" style="color:red;">{{ actor.name }}</p>
+        <img src="{{ actor.img }}" alt="배우 이미지">
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="main_card">
+    {{ review_form }}
+    {{ review_set }}
+  </div>
+
+</div>
+
+{% comment %} 오른쪽 상세 영상 조회 {% endcomment %}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel"></h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    {% for video in video_list %}
+      <div>
+        <iframe  frameborder="0" height="100%" width="100%"
+        src="{{ video.video }}" 
+        allowfullscreen>
+        </iframe>
+        {{ video.title }}<br>
+        {{ video.date }}
+        <hr>
+      </div>
+    {% endfor %}
   </div>
 </div>
 
 
-<!-- FOLLOW -->
+
+
+
+
+{% comment %} 오른쪽 아래 추천페이지 이동 {% endcomment %}
 <a class="Follow" href="{% url 'movies:for_you' movie.pk %}"></a>
 
 
