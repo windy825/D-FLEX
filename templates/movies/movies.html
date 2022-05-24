@@ -2,51 +2,166 @@
 
 {% block content %}
 <div class="container-fluid px-4">
+  <h1 class="text-light">Movies</h1>
   <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
   {% for movie in movies %}
-    {% comment %} <div class="col px-1">
-      <img src="{{ movie.poster_path }}" alt="poster" class="img-fluid">
-      <div class="descriptions">
-        <h4 style="color : red;">
-          {{ movie.title }}
-          <button>
-            <a href="{% url 'movies:movie_detail' movie.pk %}">
-              More
-            </a>
-          </button>
-        </h4>
+
+
+
+    {% comment %} <div class="my-5 poster-box">
+      <div class="poster-wrap" style="height: 100%;">
+        <a href="{% url 'movies:movie_detail' movie.pk %}">
+          <img src="{{ movie.poster_path }}" class="poster-img img-fluid" alt="movie_poster_img" style="height: 100%; width: 100%;">
+        </a>
       </div>
+      <div class="poster-text text-center text-danger fw-bold fs-3">{{ movie.title }}</div>
     </div> {% endcomment %}
-
-
-
-    
-    <div class="card bg-dark mb-3">
-      <img src="{{ movie.poster_path }}" class="card-img-top" alt="..." style="height: 90%;">
-      <div class="card-body p-2">
-        <h5 class="card-title mb-0 text-danger text-center fw-bold">{{ movie.title }}</h5>
+    <a href="" class="p-0">
+      
+      <div class="movie-card" class="p-2">
+        <img
+          src="{{ movie.poster_path }}" 
+          :alt="포스터 이미지"
+        >
+        <div class="inner-content">
+          <span class="title text-danger">{{ movie.title }}</span>
+          <hr>
+          <span class="overview">영화내용...</span>
+        </div>
       </div>
-    </div>
+    </a>
 
-
-
-
-
-
-    {% comment %} <div class="card bg-dark text-white">
-      <img src="{{ movie.poster_path }}" class="card-img" alt="...">
-      <div class="card-img-overlay">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text">Last updated 3 mins ago</p>
-      </div>
-    </div> {% endcomment %}
+    <style>
+      .movie-card {
+        position: relative;
+        overflow: hidden;
+        background: black;
+        width: 100%;
+        height: 100%;
+      }
+      .movie-card img {
+        width: 100%;
+        height: 100%;
+        
+        transition: all 0.25s linear;
+      }
+      .movie-card:hover img {
+        opacity: 0.1;
+        transform: scale(1.25);
+      }
+      .movie-card .inner-content {
+        width: 80%;
+        opacity: 0;
+        transform: translateX(-50%) translateY(-50%);
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transition: all 600ms ease;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .movie-card:hover .inner-content {
+        opacity: 1;
+        top: 50%;
+      }
+      .movie-card .inner-content .title {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+      .movie-card .inner-content .overview {
+        font-size: 0.9rem;
+        font-weight: 300;
+      }
+      .movie-card .inner-content hr {
+        border-top: 1px solid #f1f1f1;
+        width: 100%;
+      }
+    </style>
 
 
 
   {% endfor %}
+
+
+
+
   </div>
 </div>
+
+
+<style>
+  .card {
+    position: relative;
+    background: linear-gradient(180deg, #441DB2 0%, #0d0425 100%);
+    width: 13rem;
+    overflow: hidden;
+    box-shadow: 15px 15px 25px black;
+  }
+  .card img {
+    width: 100%;
+    height: auto;
+    transform: scale(1.1);
+    transition: all 0.25s linear;
+  }
+  .card:hover img {
+    opacity: 0.2;
+    transform: scale(1.25);
+  }
+  .card .inner-content {
+    width: 80%;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transition: all 600ms ease;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card:hover .inner-content {
+    opacity: 1;
+    top: 50%;
+  }
+  .card .inner-content .title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .card .inner-content .overview {
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+  .card .inner-content hr {
+    border-top: 1px solid #f1f1f1;
+    width: 100%;
+  }
+
+
+
+
+{% comment %} .poster-box {
+  position: relative;
+  overflow: hidden;
+}
+.poster-text {
+  position: absolute;
+  visibility: hidden;
+  top: 5%;
+  left: 0;
+  width: 100%;
+}
+.poster-img:hover {
+  transform: scale(1.2);
+  filter: brightness(10%);
+  transition: .5s;
+}
+.poster-box:hover .poster-text {
+  visibility: visible;
+} {% endcomment %}
+</style>
 {% endblock %}
 
 
@@ -189,6 +304,3 @@
   }
 
 </style>
-
-
-

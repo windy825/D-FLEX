@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container my-5 bg-dark-secondary">
+<div class="container my-5 bg-dark">
   <!-- 제목, 작성일 -->
   <div class="d-flex border-bottom p-3">
     <!-- 제목 -->
@@ -34,7 +34,7 @@
   </div>
   <!-- 게시글 row -->
   <div class="row my-3">
-    <div class="card bg-dark-secondary" style="border: none;">
+    <div class="card bg-dark" style="border: none;">
       <!-- 내용 -->
       <div class="card-body bg-dark">
         <div class="card-text mb-2 text-light">
@@ -46,12 +46,12 @@
         {% if request.user == article.user %}
         <div class="d-flex justify-content-start my-3">
           <div class="me-2">
-            <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-secondary text-light p-2 fw-bold">
+            <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-dark btn-outline-secondary p-2 fw-bold">
               Update
             </a>
           </div>
           <!-- Button trigger modal -->
-          <button type="submit" class="btn btn-secondary p-2 fw-bold" style="border: none;" data-bs-toggle="modal" data-bs-target="#articleDeleteButton">
+          <button type="submit" class="btn btn-outline-secondary p-2 fw-bold" data-bs-toggle="modal" data-bs-target="#articleDeleteButton">
             Delete
           </button>
           <!-- Modal -->
@@ -85,7 +85,7 @@
         {% endif %}
         <!-- 목록으로 -->
         <div class="my-3">
-          <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-secondary p-2 px-3 fw-bold">Back</a>
+          <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-dark btn-outline-secondary p-2 px-3 text-secondary fw-bold">Back</a>
         </div>
       </div>
     </div>
@@ -130,8 +130,8 @@
   </div>
 
 
-  <div class="card bg-dark-secondary" style="border: none;">
-    <div class="card-body bg-dark-secondary">
+  <div class="card bg-dark" style="border: none;">
+    <div class="card-body bg-dark">
       <!-- 댓글 목록 -->
       {% if article.comment_set.count > 0 %}
       <div class="container">
@@ -165,10 +165,10 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-secondary">Update</button>
               </form> {% endcomment %}
-              <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm btn-dark text-secondary me-2">Update</a>
+              <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
               <!-- 삭제 -->
               <!-- Button trigger modal -->
-              <button type="submit" class="btn btn-sm btn-dark text-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
+              <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
                 Delete
               </button>
               <!-- Modal -->
@@ -211,7 +211,7 @@
       <div class="container my-3">
         <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
           {% csrf_token %}
-          <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-secondary text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
+          <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
           <button type="submit" class="btn btn-danger fw-bold">Create</button>
         </form>
       </div>
