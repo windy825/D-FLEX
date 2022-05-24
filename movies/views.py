@@ -54,7 +54,7 @@ def movie_detail(request, movie_pk):
     client_id = "MB8drhevCnawoQjOxc5S"
     client_secret = "D9wdXNLZar"
 
-    encText = urllib.parse.quote(movie.title)
+    encText = urllib.parse.quote(movie.title + '영화')
     url = "https://openapi.naver.com/v1/search/image?query=" + encText
     request1 = urllib.request.Request(url)
     request1.add_header("X-Naver-Client-Id",client_id)
@@ -73,7 +73,7 @@ def movie_detail(request, movie_pk):
             })
    
     # 감독 정보 이미지 크롤링
-    encText = urllib.parse.quote(movie.director)
+    encText = urllib.parse.quote(movie.director + '감독')
     url = "https://openapi.naver.com/v1/search/image?query=" + encText
     request1 = urllib.request.Request(url)
     request1.add_header("X-Naver-Client-Id",client_id)
@@ -91,7 +91,7 @@ def movie_detail(request, movie_pk):
     img_actors = []
     for actor in movie.actors.strip('[]').split(','):
         actor = actor.strip("'")
-        encText = urllib.parse.quote(actor)
+        encText = urllib.parse.quote(actor + '배우')
         url = "https://openapi.naver.com/v1/search/image?query=" + encText
         request1 = urllib.request.Request(url)
         request1.add_header("X-Naver-Client-Id",client_id)
@@ -103,7 +103,7 @@ def movie_detail(request, movie_pk):
         answer = json.loads(answer)
 
         img_actors.append({
-            'name':actor,
+            'name':actor.strip("'"),
             'img':answer['items'][0]['thumbnail'],
         })
 
