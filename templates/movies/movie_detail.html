@@ -72,9 +72,8 @@
     </div>
   </div>
 
-  <hr>
-
   <div class="container-xxl" style="background-color: #000;">
+    <hr style="color:white">
     <div class="card" style="border: none;">
       <div class="card-body" style="background-color: #000;">
         <!-- 리뷰 목록 -->
@@ -158,10 +157,10 @@
           {% endfor %}
         </div>
         {% endif %}
-        <!-- 댓글 작성 -->
       </div>
     </div>
   </div>
+  <!-- 댓글 작성 -->
   <div class="container-xxl py-3" style="background-color: #000;">
     <div class="container-fluid">
       <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3">

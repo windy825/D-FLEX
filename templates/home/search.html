@@ -2,311 +2,86 @@
 
 {% block content %}
 
-
-<div class="container-fluid px-4 img-back" style="height: auto;">
-  <h1 class="text-light">Movies</h1>
-  <div class="container">
-    <!-- 검색 바 -->
-    <div class="container my-5">
-      <form action="{% url 'home:search' %}" method='POST' class="d-flex" role="search">
-        {% csrf_token %}
-        <input class="form-control p-4 bg-dark text-light fs-3" name='search' type="search" placeholder="Search" aria-label="Search" style="width: 80%; border: none; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-        <button class="btn btn-danger fs-2 fw-bold text-spacing" type="submit" style="width: 20%; border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
-      </form>
-    </div>
-
-    <!-- 유튜브 영상 -->
-    <div class="container border-bottom">
-      <h3 class="text-light fw-bold mt-4 mb-2">On YouTube</h3>
-      <div class="row row-cols-2 row-cols-xl-3">
-        {% for video in video_list %}
-        <div class="mb-3" style="width: 25rem; height: 13rem;">
-          <div class="movie-card" style="width: 100%; height: 100%;">
-            <iframe src="{{ video.video }}" frameborder="0" allowfullscreen width="100%" height="100%"></iframe>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- 관련 영화 정보 -->
-    <div class="container-fluid border-bottom px-4">
-      <h3 class="text-light fw-bold mt-4 mb-2">Related Movies</h3>
-      <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
-        {% for movie in movies %}
-        <div class=" mb-3">
-          <a href="{% url 'movies:movie_detail' movie.pk %}">
-            <div class="movie-card">
-              <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
-              <div class="movie-info">
-                <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
-                <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-                <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:150 }}</span>
-              </div>
-            </div>
-          </a>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-
-    <div class="container-fluid border-bottom p-3">
-			<h3 class="text-light fw-bold mt-4 mb-2">Related User</h3>
-      <div class="container-fluid">
-        <div class="container">
-          <div class="row">
-            {% for user in users %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-              <div class="container justify-content-center align-items-center bg-dark p-3 py-5" style="border-radius: 5px; max-width: 250px">
-                <div class="container justify-content-center text-center mb-2">
-                  <a href="{% url 'accounts:profile' user.username %}" class="text-decoration-none">
-                    <i class="fa-solid fa-user fa-3x text-secondary"></i>
-                  </a>
-                </div>
-                <div class="container px-0 mb-2">
-                  <a href="{% url 'accounts:profile' user.username %}" class="text-decoration-none">
-                    <h4 class="text-light mb-0">{{ user.username }}</h4>
-                  </a>
-                  <span class="text-light">{{ user.email }}</span>
-                </div>
-                <div class="container px-0">
-                  <div class="row">
-                    <div class="col-3 d-flex justify-content-center">
-                      <a class="text-secondary icons" href="https://www.instagram.com/">
-                        <i class="fa-brands fa-instagram fa"></i>
-                      </a>
-                    </div>
-                    <div class="col-3 d-flex justify-content-center">
-                      <a class="text-secondary icons" href="https://twitter.com/?lang=ko">
-                        <i class="fa-brands fa-facebook fa"></i>
-                      </a>
-                    </div>
-                    <div class="col-3 d-flex justify-content-center">
-                      <a class="text-secondary icons" href="https://ko-kr.facebook.com/">
-                        <i class="fa-brands fa-twitter fa"></i>
-                      </a>
-                    </div>
-                    <div class="col-3 d-flex justify-content-center">
-                      <a class="text-secondary icons" href="https://www.google.com/">
-                        <i class="fa-brands fa-google"></i>
-                      </a>
-                    </div>
-                  </div>
-
-
-                  <style>
-                    .icons:hover {
-                      color: #f8f9fa!important;
-                      transition: all linear 0.2s;
-                    }
-                  </style>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-		</div>
-
-
-    <!-- 관련 게시글 -->
-    <div class="container p-3 pb-5 mb-5">
-      <div class="container p-3">
-        <h3 class="text-light fw-bold mt-4 mb-2">Community</h3>
-      </div>
-      <div class="list-group rounded-0 bg-dark">
-        {% for article in articles %}
-        <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
-          <div class="d-flex w-100 justify-content-between">
-            <h6 class="mb-1 text-light">
-              {{ article.title }}
-              {% if article.comment_set.count > 0 %}
-              <span class="small text-danger fw-bold py-2">
-                {{ article.comment_set.count }}
-              </span>
-              {% endif %}
-            </h6>
-            <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
-          </div>
-          <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-
-
-
-
-  </div>
-</div>
-
-
-<style>
-.img-back {
-  background-image: linear-gradient(rgb(20, 20, 20), transparent, rgb(20, 20, 20)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170');
-  background-image: linear-gradient(rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 0.90)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  height: 75vh;
-}
-
-.movie-card {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-.movie-card img {
-  width: 100%;
-  height: 100%;
-  transition: all 0.25s linear;
-}
-.movie-card:hover img {
-  opacity: 0.07;
-  transform: scale(1.25);
-  border-radius: 0.375rem!important;
-}
-.movie-info {
-  width: 80%;
-  opacity: 0;
-  transform: translateX(-50%) translateY(-50%);
-  position: absolute;
-  top: 80%;
-  left: 50%;
-  transition: all 600ms ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.movie-card:hover .movie-info {
-  opacity: 1;
-  top: 50%;
-}
-</style>
-
-
-{% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %} 
 <div class="top">
+
 	<div class="columns">
 		<div class="column is-full featured_wrapper p-0">
 			<img src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/banner.jpg" class="featured">
 			<div class="title_wrapper">
-                <div class="container mb-5" style="width:900px;">
-                    <form action="{% url 'home:search' %}" method='POST'  class="d-flex" role="search">
-                        {% csrf_token %}
-                        <input class="form-control p-4 bg-white me-2" name='search' type="search" placeholder= "{{ target }}" aria-label="Search">
-                        <button class="btn btn-danger fw-bold" type="submit">Search</button>
-                    </form>
-                </div>
+        <!-- 검색 바 -->
+        <div class="container my-5">
+          <form action="{% url 'home:search' %}" method='POST' class="d-flex" role="search">
+            {% csrf_token %}
+            <input class="form-control p-4 bg-dark text-light fs-3" name='search' type="search" placeholder="Search" aria-label="Search" style="width: 80%; border: none; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            <button class="btn btn-danger fs-2 fw-bold text-spacing" type="submit" style="width: 20%; border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+          </form>
+        </div>
 			</div>
 		</div>
 	</div>
 </div>
- {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div class="container">
-	<div class="columns is-multiline p-0 pt-6 last">
-        <div class="column is-full">
-			<h2 class="has-text-white text-light">On Youtube</h2>
-		</div>
-        <div class="container-fluid px-4" style="margin:10px; width:100%; height:100%;">
-            <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2 row-cols-xxl-2">
-                {% for video in video_list %}
-                <div style="height=450px; width=800px;">
-                    <iframe  frameborder="0" height="350px" width="600px" src="{{ video.video }}" allowfullscreen></iframe>
-                </div>
-                {% endfor %}
-            </div>
+  <h1 class="text-light fw-bold mt-4 mb-3">On YouTube</h1>
+	<div class="container border-top">
+    <div class="row row-cols-2 row-cols-xl-3 mt-4">
+      {% for video in video_list %}
+      <div class="m-3" style="width: 38rem; height: 27rem; background-color:gray;">
+        <div class="movie-card" style="width: 100%; height: 100%;">
+          <iframe src="{{ video.video }}" frameborder="0" allowfullscreen width="100%" height="100%"></iframe>
         </div>
-        <hr>
-		<div class="column is-full">
-			<h2 class="has-text-white text-light">Movie ( {{ movies|length }} )</h2>
-		</div>
-        <div class="container-fluid px-4" style="margin:10px;">
-            <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
-                {% for movie in movies %}
-                <div class="my-5">
-                    <a href="{% url 'movies:movie_detail' movie.pk %}">
-                    <div class="movie-card">
-                        <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
-                        <div class="movie-info">
-                        <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
-                        <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-                        <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:100 }}...</span>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-                {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h1 class="text-light fw-bold mt-4 mb-3">Related movies ({{movies|length}})</h1>
+	<div class="container border-top">
+    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 mt-4">
+      {% for movie in movies %}
+      <div class=" mb-3">
+        <a href="{% url 'movies:movie_detail' movie.pk %}">
+          <div class="movie-card">
+            <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
+            <div class="movie-info">
+              <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
+              <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
+              <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:150 }}</span>
             </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h1 class="text-light fw-bold mt-4 mb-3">Community ({{articles|length}})</h1>
+	<div class="container border-top">
+    <div class="list-group rounded-0 bg-dark mt-4">
+      {% for article in articles %}
+      <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
+        <div class="d-flex w-100 justify-content-between">
+          <h6 class="mb-1 text-light">
+            {{ article.title }}
+            {% if article.comment_set.count > 0 %}
+            <span class="small text-danger fw-bold py-2">
+              {{ article.comment_set.count }}
+            </span>
+            {% endif %}
+          </h6>
+          <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
         </div>
+        <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
 
-
-        <div class="column is-full">
-			<h2 class="has-text-white text-light">User ( {{ users|length }} )</h2><br>
-		</div>
-        <div class="container-fluid px-4" style="margin:10px;">
+  <h1 class="text-light fw-bold mt-4 mb-3">User ( {{ users|length }} )</h1>
+	<div class="container border-top">
+        <div class="container-fluid mt-4">
             <div class="container">
                 <div class="row">
-                
                     {% for user in users %}
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <div class="our-team">
@@ -316,7 +91,7 @@
                                 </a>
                             </div>
                             <div class="team-content">
-                                <h3 class="name">{{ user.username }}</h3>
+                                <h3 class="name text-black fw-bold mt-4 mb-3">{{ user.username }}</h3>
                                 <h4 class="title">{{ user.email }}</h4>
                             </div>
                             <ul class="social">
@@ -328,88 +103,23 @@
                             </div>
                         </div>
                     {% endfor %}
-
                 </div>
               </div>
 
 
         </div>
 
-    <div class="column is-full">
-			<h2 class="has-text-white text-light">Community ( {{ articles|length }} )</h2>
-		</div>
-    <div class="container-fluid px-4" style="margin:10px;">
-        <div class="container bg-dark p-2 my-5">
-        <table class="table table-hover bg-dark rounded">
-            <!-- tbody -->
-            <tbody>
-            {% for article in articles %}
-            <tr class="text-center text-light">
-                <!-- 게시글 번호 -->
-                <td class="text-end text-secondary">
-                {{ article.pk }}
-                </td>
-                <!-- 좋아요 수 -->
-                <td>
-                {% if article.like_users.count > 0 %}
-                    <span class="badge text-bg-danger fw-bold">
-                    {{ article.like_users.count }}
-                    </span>
-                {% endif %}
-                </td>
-                <!-- 제목, 댓글 수 -->
-                <td class="text-start">
-                <a href="{% url 'articles:article_detail' article.pk %}" class="text-decoration-none">
-                    <span class="text-light">{{ article.title }}</span>
-                    {% if article.comment_set.count > 0 %}
-                    <span class="small text-danger fw-bold py-2">
-                        {{ article.comment_set.count }}
-                    </span>
-                    {% endif %}
-                </a>
-                </td>
-                <!-- 작성자 -->
-                <td>
-                <a href="{% url 'accounts:profile' article.user.username %}" class="text-decoration-none">
-                    <span class="text-light">{{ article.user.username }}</span>
-                </a>
-                </td>
-                <!-- 작성일 -->
-                <td>
-                <span class="text-secondary" style="font-size: 12px;">{{ article.created_at|date:'y-m-d H:i' }}</span>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
 	</div>
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
-  
-  body,
+    body,
   html {
       background: #000000;
       padding: 0;
       margin: 0;
       padding-bottom: 6rem;
-      font-family: "Montserrat", sans-serif;
       width: 100%;
   }
   .container {
@@ -616,7 +326,6 @@
     color: #1369ce;
     background-color: #f7f5ec;
   }
-  </style>
+</style>
 
-
-
+{% endblock content %}

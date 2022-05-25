@@ -34,24 +34,24 @@ def movie_detail(request, movie_pk):
     form = ReviewForm()
 
     # 영상 리스트 by youtube api
-    from googleapiclient.discovery import build
-    DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
-    YOUTUBE_API_SERVICE_NAME="youtube"
-    YOUTUBE_API_VERSION="v3"
-    youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    # from googleapiclient.discovery import build
+    # DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
+    # YOUTUBE_API_SERVICE_NAME="youtube"
+    # YOUTUBE_API_VERSION="v3"
+    # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-    search_response_data = youtube.search().list(
-    q = movie.title + '영화',
-    order = "relevance",
-    fields = "items(id)",
-    part = "snippet",
-    maxResults = 6
-    ).execute()['items']
+    # search_response_data = youtube.search().list(
+    # q = movie.title + '영화',
+    # order = "relevance",
+    # fields = "items(id)",
+    # part = "snippet",
+    # maxResults = 6
+    # ).execute()['items']
 
-    video_list = []
-    for item in search_response_data:
-        video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-        video_list.append({'video':video})
+    # video_list = []
+    # for item in search_response_data:
+    #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+    #     video_list.append({'video':video})
 
 
     import urllib.request
@@ -105,7 +105,7 @@ def movie_detail(request, movie_pk):
         'movie': movie,
         'review_form': form,
         'genres':genres,
-        'video_list':video_list,
+        # 'video_list':video_list,
         'img_movies':img_movies,
         'img_actors':img_actors,
     }
@@ -143,14 +143,12 @@ def review_delete(request, movie_pk, review_pk):
     return redirect('movies:movie_detail', movie_pk)
 
 
-
 def for_you(request, movie_pk):
     global actors_img
     pick_movie = get_object_or_404(Movie, pk=movie_pk)
     movies = Movie.objects.all()
     movies = [movie for movie in movies if movie.pk != movie_pk]
     
-
     # 배우 기반 추천
     recommend_movies_by_actors = []
     flag = 0
@@ -166,35 +164,14 @@ def for_you(request, movie_pk):
                 recommend_movies_by_actors.append({'actor':actor.strip("''"), 'actor_img': [i['img'] for i in actors_img if i['name'] == actor], 'movie':movie})
                 flag = 1
                 break
-    
-
-    
-    
-
-    # 줄거리 기반 추천
-    pick_movie_keywords = pick_movie.overview.replace('.','').replace(',','').split()
-    pick_movie_keywords = set([i for i in pick_movie_keywords if i not in {'그', '된다', \
-        '되어', '되고', '은', '는', '이', '가', '어느', '있는', '된', '바로', '때', '알게', '통해',\
-        '위해', '할', '날', '자신을', '나오는', '무렵', '전부', '수', '자신이', '그가', '마침내',\
-        '전', '있음을', '알', '없는', '한', '후', '한', '두', '될', '채', '더', '그의', '그가', '그는',\
-        '모든', '하지만', '최고의' }])
-    answer = []
-    for movie in movies:
-        temp = set(movie.overview.split())
-        same_keywords = pick_movie_keywords & temp
-        if len(same_keywords) >= 1:
-            answer.append([movie.title, same_keywords])
-    answer.sort(key= lambda x : len(x[1]), reverse=True)
 
     context = {
         'recommend_movies_by_actors' : recommend_movies_by_actors,
-        'recommend_movie_by_overview_keywords'  : answer[:7],
         'pick_movie' : pick_movie,
     }
 
     return render(request, 'movies/movie_for_you.html', context)
     
-    # recommend_movies_by_
 
 # 장르기반
 def for_you2(request, movie_pk):
@@ -224,10 +201,40 @@ def for_you2(request, movie_pk):
     
     context = {
         'recommend_movies_by_genres' : recommend_movies_by_genres,
+        'pick_movie' : pick_movie,
     }
 
     return render(request, 'movies/movie_for_you2.html', context)
 
 
 def for_you3(request, movie_pk):
-    pass
+    pick_movie = get_object_or_404(Movie, pk=movie_pk)
+    movies = Movie.objects.all()
+    movies = [movie for movie in movies if movie.pk != movie_pk]
+    # 줄거리 기반 추천
+    pick_movie_keywords = pick_movie.overview.replace('.','').replace(',','').split()
+    pick_movie_keywords = set([i for i in pick_movie_keywords if i not in {'그', '된다', \
+        '되어', '되고', '은', '는', '이', '가', '어느', '있는', '된', '바로', '때', '알게', '통해',\
+        '위해', '할', '날', '자신을', '나오는', '무렵', '전부', '수', '자신이', '그가', '마침내',\
+        '전', '있음을', '알', '없는', '한', '후', '한', '두', '될', '채', '더', '그의', '그가', '그는',\
+        '모든', '하지만', '최고의', '하는데', '그리고', '오랜', '못한', '예상치', '새로운', '들어온', '속', '맞서', '하는데…',\
+        '맞서', '넘어', }])
+    answer = []
+    for movie in movies:
+        temp = set(movie.overview.split())
+        same_keywords = pick_movie_keywords & temp
+        if len(same_keywords) > 1:
+            answer.append([movie, same_keywords])
+    answer.sort(key= lambda x : len(x[1]), reverse=True)
+
+    recommend_movies_by_overview = []
+    for movie, keywords in answer:
+        movie.genres = movie.genres.strip("[]").replace("'", "")
+        recommend_movies_by_overview.append({'movie':movie, 'keywords':keywords})
+
+    context = {
+        'recommend_movies_by_overview' : recommend_movies_by_overview,
+        'pick_movie' : pick_movie,
+    }
+
+    return render(request, 'movies/movie_for_you3.html', context)

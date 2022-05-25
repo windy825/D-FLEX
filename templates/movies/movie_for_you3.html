@@ -4,32 +4,51 @@
 <div class="top">
     <div class="columns">
         <div class="column is-full featured_wrapper">
-            <img src="https://user-images.githubusercontent.com/89068148/170288589-ad2b172a-6d0a-4282-ab29-3c4cc45ae657.png" class="featured" style="height:800px">
+            <img src="https://user-images.githubusercontent.com/89068148/170289378-64b42624-f3c8-4ac6-b472-d56049d50316.png" class="featured" style="height:800px">
             <div class="title_wrapper">
-                <h1 class="title has-text-white bouncing" style="color:#0431B4; font-size:70px">원하는 걸 못 찾았나요 ?</h1><br><br><br><br><br><br><br><br>
+                <h1 class="title has-text-white bouncing" style="color:#0431B4; font-size:70px">아직도 흥미가 없나 보군요 ?</h1><br><br><br><br><br><br><br><br>
                 <div class="container">
                     <div class="item">
-                        <a href="{% url 'movies:movie_detail' pick_movie.pk %}" class="link-secondary text-danger text-decoration-none fs-1 fw-bold">차..찾은 것 같아요 ! <i class="fa-solid fa-person-running"></i></a>
+                        <a href="{% url 'movies:movie_detail' pick_movie.pk %}" class="link-secondary text-danger text-decoration-none fs-1 fw-bold">죄송합니다 ! 안녕히 계세요 ! <i class="fa-solid fa-person-running"></i></a>
                     </div>
                     <br>
                     <div class="item">
-                        <a href="#actors_page" class="item link-secondary text-danger text-decoration-none fs-4 fw-bold">글쎄요... ? [더 진행하기]</a>
+                        <a href="#selections" class="item link-secondary text-danger text-decoration-none fs-4 fw-bold">조..조금만 더... [더 진행하기]</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <a name="selections">
 </div>
 
 
-<a name="actors_page">
-<div class="container">
-	<div class="columns is-multiline p-0 pt-6 last">
-		<div class="column is-full">
-			<h1 class="has-text-white bouncing" style="color:#0431B4; font-size:60px">이런 장르는 어때요 ? ( {{recommend_movies_by_genres|length}} )</h1>
-		</div>
-        <div class="container-fluid px-4" style="margin:20px;">
-            <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+<div class="container-fluid">
+	<div class="row  p-0 pt-6 last">
+        {% for item in recommend_movies_by_overview %}
+            <div id="card_container">
+                <div id="card">
+                <div class="shine"></div>
+                <div class="text-block">
+                    <h1>{{ item.movie.title }}<br> <small>{{ item.movie.genres }}</small></h1><br><br>
+                    <h3 class="text-danger">same Keywords : {{ item.keywords|length }}</h3>
+                    <h5 class="mt-2">{% for word in item.keywords %}
+                        {{ word }}
+                        {% endfor %}
+                    </h5>
+                    <br>
+                    <br>
+                    <button >
+                        <a href="{% url 'movies:movie_detail' item.movie.pk %}" style="text-decoration:none; color:white;">
+                            GET IT !!
+                        </a>
+                    </button>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
                 {% for movie in recommend_movies_by_genres %}
                 <div class="my-5">
                     <a href="{% url 'movies:movie_detail' movie.movie.pk %}">
@@ -50,7 +69,7 @@
                 {% endfor %}
             </div>
         </div>
-        <a href="{% url 'movies:for_you3' pick_movie.pk %}" class="item link-secondary text-danger text-decoration-none fs-3 fw-bold">ㅁ..뭐...더 없나요 ?</a>
+        
 
 
 
@@ -58,21 +77,116 @@
     
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
     @import url('https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap');
-    body,
-    html {
-        background: #000000;
-        padding: 0;
-        margin: 0;
-        padding-bottom: 6rem;
-        width: 100%;
-    }
+
+
+    @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+    @import url(https://fonts.googleapis.com/css?family=Rubik:400,900);
+
+
+
+#card_container {
+  width:750px;
+  height:450px;
+  position:relative;
+  margin: auto;
+  margin-bottom:150px;
+
+}
+#card {
+  animation:backAn 50s infinite;
+  color:#fff;
+  padding:30px;
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:1;
+  background:url(https://riverbeats.life/neworleans/wp-content/uploads/2018/07/Atlantis.png) 100% bottom;
+  /*background:url(http://riccardotartaglia.it/img/deadpool/back.jpg) 100% bottom;*/
+  /*box-shadow:0px 45px 100px rgba(0, 0, 0, 0.4), inset 0 0 0 1000px rgba(156, 27, 27, 0.6);*/
+  box-shadow:0px 45px 100px rgba(0, 0, 0, 0.4), inset 0 0 0 1000px rgba(0, 76, 86, 0.6);
+}
+#card .text-block {
+  position:relative;
+  z-index:2;
+  text-shadow:0 3 10 rgba(0, 0, 0, 0.7);
+}
+#card .text-block h1 {
+  font-family:'Rubik', Sans-serif;
+  font-size:3em;
+  margin:0;
+  text-transform:uppercase;
+  font-weight:700;
+}
+#card .text-block h1 small {
+  font-size:.4em;
+  color:#ccc;
+  position:relative;
+  bottom:10px;
+}
+#card .text-block h3 {
+  margin:0;
+  font-weight:700;
+}
+#card .text-block p {
+  font-weight:300;
+  width:60%;
+}
+#card .text-block button {
+  transition:all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
+  border:4px solid #fff;
+  padding:10px;
+  background:transparent;
+  font-family:'Rubik', Sans-serif;
+  text-transform:uppercase;
+  font-weight:700;
+  cursor:pointer;
+}
+#card .text-block button:hover {
+  background:#004c56;
+}
+#card_container .pg {
+  position:absolute;
+  height:450px;
+  width:40%;
+  right:-10px;
+  bottom:0px;
+  z-index:2;
+}
+#card_container .pg > img{
+  height:450px;
+}
+.shine {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 60%);
+  z-index:1;
+}
+button {
+  color:#fff;
+}
+@keyframes backAn {
+  0% {
+    background-size:100%;
+  }
+  50% {
+    background-size:250%;
+  }
+  100% {
+    background-size:100%;
+  }
+}
+
+
 
     .bouncing {
         color: #255;
         font-size: 160px;
         margin-top: 110px;
-        -webkit-animation: bounce 1.2s infinite;
-                animation: bounce 1.2s infinite;
+        -webkit-animation: bounce 0.4s -0.2s infinite;
+                animation: bounce 0.4s -0.2s infinite;
     }
 
     @-webkit-keyframes bounce {
@@ -100,8 +214,6 @@
         opacity: 0;
             }
     }
-
-
 
     h1 {
         font-family: 'Black And White Picture', sans-serif;
