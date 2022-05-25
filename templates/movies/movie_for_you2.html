@@ -6,49 +6,47 @@
         <div class="column is-full featured_wrapper">
             <img src="https://user-images.githubusercontent.com/89068148/170244470-36952b16-39eb-428f-bbe3-fe865a255d1c.jpg" class="featured" style="height:700px">
             <div class="title_wrapper">
-                <h1 class="title has-text-white bouncing" style="color:#0431B4; font-size:70px">{{ pick_movie.title }} 말고, <br>다른 특별한걸 원하는군요 ?</h1><br><br><br><br><br><br><br><br>
+                <h1 class="title has-text-white bouncing" style="color:#0431B4; font-size:70px">별로 흥미가 생기지 않나 보군요 ?</h1><br><br><br><br><br><br><br><br>
                 <div class="container">
                     <div class="item">
-                        <a href="{% url 'articles:articles' %}" class="link-secondary text-danger text-decoration-none fs-1 fw-bold">그냥 볼게요 살려주세요... <i class="fa-solid fa-person-running"></i></a>
+                        <a href="{% url 'articles:articles' %}" class="link-secondary text-danger text-decoration-none fs-1 fw-bold">흥미가 생긴 것 같습니다 ! <i class="fa-solid fa-person-running"></i></a>
                     </div>
                     <br>
                     <div class="item">
-                        <a href="#actors_page" class="item link-secondary text-danger text-decoration-none fs-4 fw-bold">날 좀 더 자극시켜 봐요 [진행하기]</a>
+                        <a href="#actors_page" class="item link-secondary text-danger text-decoration-none fs-4 fw-bold">이것밖에 없나요 ? [더 진행하기]</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="container">
     <a name="actors_page">
 	<div class="columns is-multiline p-0 pt-6 last">
 		<div class="column is-full">
-			<h1 class="has-text-white" style="color:blue">이 배우들을 찾고 있나요? ( {{ recommend_movies_by_actors|length }} )</h1>
+			<h1 class="has-text-white" style="color:blue">이 장르들을 찾고 있나요? ( {{ recommend_movies_by_genres|length }} )</h1>
 		</div>
         <div class="container-fluid px-4" style="margin:10px;">
             <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
-                {% for movie in recommend_movies_by_actors %}
+                {% for movie in recommend_movies_by_genres %}
                 <div class="my-5">
                     <a href="{% url 'movies:movie_detail' movie.movie.pk %}">
                     <div class="movie-card">
-                        {% for img in movie.actor_img %}
-                        <img src="{{ img }}" alt="배우 이미지" class="rounded">
+                        <img src="https://user-images.githubusercontent.com/89068148/170262934-0711de1c-c23a-45cb-95b3-d134d848d602.jpg" alt="">
+                        {% for genre in movie.same_genres %}
+                        {{ genre }}
                         {% endfor %}
                         <div class="movie-info">
-                        <span class="text-danger text-center fs-2 fw-bold">{{ movie.movie.title }}</span>
-                        <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-                        <span class="movie-overview d-inline-block text-white" style="color:white">{{ movie.actor }}</span>
+                            <img src="{{ movie.movie.poster_path }}" alt="">
                         </div>
                     </div>
                     </a>
                 </div>
                 {% endfor %}
             </div>
-        </div>
+        </div> 
 
-        <a href="{% url 'movies:for_you2' pick_movie.pk %}" class="item link-secondary text-danger text-decoration-none fs-3 fw-bold">음...글쎄요 ?</a>
+        {% comment %} <a href="{% url 'movies:for_you2' %}" class="item link-secondary text-danger text-decoration-none fs-3 fw-bold">음...글쎄요 ?</a> {% endcomment %}
 
 
 <style>
@@ -68,8 +66,8 @@
         color: #255;
         font-size: 160px;
         margin-top: 110px;
-        -webkit-animation: bounce 2.0s -0.5s infinite;
-                animation: bounce 2.0s -0.5s infinite;
+        -webkit-animation: bounce 0.7s -0.4s infinite;
+                animation: bounce 0.7s -0.4s infinite;
     }
 
     .bouncing:hover {

@@ -7,6 +7,8 @@ from django.core.paginator import Paginator
 from movies.forms import ReviewForm
 from .models import Movie, Review
 
+actors_img = []
+
 
 # path('', views.movies),
 @require_safe
@@ -25,6 +27,7 @@ def movies(request):
 # path('<int:movie_pk>/', views.movie_detail),
 @require_safe
 def movie_detail(request, movie_pk):
+    global actors_img
     movie = get_object_or_404(Movie, pk=movie_pk)
     genres = movie.genres.strip('[]').replace("'",'').split(',')[:4]
     movie.overview = movie.overview
@@ -95,6 +98,8 @@ def movie_detail(request, movie_pk):
             'name':actor,
             'img':answer,
         })
+    
+    actors_img = img_actors[:]
 
     context = {
         'movie': movie,
@@ -140,67 +145,30 @@ def review_delete(request, movie_pk, review_pk):
 
 
 def for_you(request, movie_pk):
+    global actors_img
     pick_movie = get_object_or_404(Movie, pk=movie_pk)
     movies = Movie.objects.all()
     movies = [movie for movie in movies if movie.pk != movie_pk]
     
 
-    # 배우 사진 찾기
-    import urllib.request
-    import json
-    client_id = "MB8drhevCnawoQjOxc5S"
-    client_secret = "D9wdXNLZar"
-
-    actor_info = []
-    for actor in pick_movie.actors:
-        actor = actor.strip("''")
-        encText = urllib.parse.quote(actor+'얼굴')
-        url = "https://openapi.naver.com/v1/search/image?query=" + encText
-        request1 = urllib.request.Request(url)
-        request1.add_header("X-Naver-Client-Id",client_id)
-        request1.add_header("X-Naver-Client-Secret",client_secret)
-        response = urllib.request.urlopen(request1)
-            
-        response_body = response.read()
-        answer = response_body.decode('utf-8')
-        answer = json.loads(answer)
-# answer["items"][0]['thumbnail']
-        # if not answer['items']:
-        #     actor_info.append('actor':'https://user-images.githubusercontent.com/89068148/170207316-c4fe2034-c9c1-4829-b0d3-ac3d56147fee.jpg')
-
-
     # 배우 기반 추천
-    actors = pick_movie.actors
     recommend_movies_by_actors = []
     flag = 0
     for movie in movies:
         if flag:
             flag = 0
             continue
-        for actor in actors.strip('[]').split(','):
+        for item in actors_img:
+            actor = item['name']
             if flag:
                 break
             if actor in movie.actors:
-                recommend_movies_by_actors.append({'actor':actor, 'movie':movie})
+                recommend_movies_by_actors.append({'actor':actor.strip("''"), 'actor_img': [i['img'] for i in actors_img if i['name'] == actor], 'movie':movie})
                 flag = 1
                 break
     
-    # 장르 기반 추천
-    genres = pick_movie.genres
-    recommend_movies_by_genres = []
-    for movie in movies:
-        if flag:
-            flag = 0
-            continue
-        cnt = 0
-        for genre in genres.strip('[]').split(','):
-            if genre in movie.genres:
-                cnt += 1
-                
-            if cnt >= 2:
-                    recommend_movies_by_genres.append(movie)
-                    flag = 1
-                    break
+
+    
     
 
     # 줄거리 기반 추천
@@ -220,10 +188,46 @@ def for_you(request, movie_pk):
 
     context = {
         'recommend_movies_by_actors' : recommend_movies_by_actors,
-        'recommend_movies_by_genres' : recommend_movies_by_genres,
-        'recommend_movie_by_overview_keywords'  : answer[:7]
+        'recommend_movie_by_overview_keywords'  : answer[:7],
+        'pick_movie' : pick_movie,
     }
 
     return render(request, 'movies/movie_for_you.html', context)
     
     # recommend_movies_by_
+
+# 장르기반
+def for_you2(request, movie_pk):
+    pick_movie = get_object_or_404(Movie, pk=movie_pk)
+    movies = Movie.objects.all()
+    movies = [movie for movie in movies if movie.pk != movie_pk]
+    # 장르 기반 추천
+    flag = 0
+    genres = pick_movie.genres
+    recommend_movies_by_genres = []
+    for movie in movies:
+        if flag:
+            flag = 0
+            continue
+        same_genre = []
+        cnt = 0
+
+        for genre in genres.strip('[]').split(','):
+            if genre in movie.genres:
+                same_genre.append(genre)
+                cnt += 1
+                
+            if cnt >= 3:
+                    recommend_movies_by_genres.append({'movie':movie, 'same_genres':same_genre})
+                    flag = 1
+                    break
+    
+    context = {
+        'recommend_movies_by_genres' : recommend_movies_by_genres,
+    }
+
+    return render(request, 'movies/movie_for_you2.html', context)
+
+
+def for_you3(request, movie_pk):
+    pass
