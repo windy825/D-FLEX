@@ -9,7 +9,7 @@
     </div>
 </div>
 
-    <h1>FOR YOU</h1>
+    {% comment %} <h1>FOR YOU</h1>
     <br>
     <hr>
     <br>
@@ -28,25 +28,25 @@
     <h3>줄거리 기반</h3>
     {% for movie in recommend_movie_by_overview_keywords %}
     {{ movie }}<br>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 
 
 <div class="container">
 	<div class="columns is-multiline p-0 pt-6 last">
 		<div class="column is-full">
-			<h2 class="has-text-white" style="color:red">Movie ( {{ movies|length }} )</h2>
+			<h2 class="has-text-white" style="color:red">Movie ( {{ recommend_movies_by_actors|length }} )</h2>
 		</div>
         <div class="container-fluid px-4" style="margin:10px;">
             <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
-                {% for movie in movies %}
+                {% for movie in recommend_movies_by_actors %}
                 <div class="my-5">
-                    <a href="{% url 'movies:movie_detail' movie.pk %}">
+                    <a href="{% url 'movies:movie_detail' movie.movie.pk %}">
                     <div class="movie-card">
-                        <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
+                        <img src="{{ movie.movie.poster_path }}" alt="포스터 이미지" class="rounded">
                         <div class="movie-info">
-                        <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
+                        <span class="text-danger text-center fs-2 fw-bold">{{ movie.movie.title }}</span>
                         <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-                        <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:100 }}...</span>
+                        <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.movie.overview|truncatechars:100 }}...</span>
                         </div>
                     </div>
                     </a>

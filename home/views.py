@@ -39,32 +39,32 @@ def searching(request):
                 answer_user.append(user)
 
         # 검색 영상 리스트 by youtube api
-        # from googleapiclient.discovery import build
-        # DEVELOPER_KEY = "AIzaSyDmvqwqcrhl6vt90DxYBk-BhLhzcBaHJmU"
-        # YOUTUBE_API_SERVICE_NAME="youtube"
-        # YOUTUBE_API_VERSION="v3"
-        # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+        from googleapiclient.discovery import build
+        DEVELOPER_KEY = "AIzaSyDmvqwqcrhl6vt90DxYBk-BhLhzcBaHJmU"
+        YOUTUBE_API_SERVICE_NAME="youtube"
+        YOUTUBE_API_VERSION="v3"
+        youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-        # search_response_data = youtube.search().list(
-        # q = target + ' 영화',
-        # order = "relevance",
-        # fields = "items(id)",
-        # part = "snippet",
-        # maxResults = 6
-        # ).execute()['items']
+        search_response_data = youtube.search().list(
+        q = target + ' 영화',
+        order = "relevance",
+        fields = "items(id)",
+        part = "snippet",
+        maxResults = 6
+        ).execute()['items']
 
 
-        # video_list = []
-        # for item in search_response_data:
-        #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-        #     video_list.append({'video': video})
+        video_list = []
+        for item in search_response_data:
+            video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+            video_list.append({'video': video})
 
         context = {
             'target' : target,
             'movies' : answer_movies,
             'articles' : answer_article,
             'users' : answer_user,
-            'video_list' : [1,2,3,4,5],
+            'video_list' : video_list,
         }
     
     return render(request, 'home/search.html', context)

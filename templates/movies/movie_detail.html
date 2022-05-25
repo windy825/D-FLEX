@@ -26,8 +26,8 @@
         </div>
         <div class="d-flex justify-content-between">
           <div>
-            <button class="btn btn-danger me-2" style="width: 6rem;"><i class="fa fa-solid fa-heart text-light"></i></button>
-            <button class="btn btn-secondary me-2" style="width: 6rem;">Review</button>
+            <button class="btn btn-danger me-2" style="width: 6rem;"><i class="fa-solid fa-star"></i> {{ movie.popularity }}</button>
+            <button class="btn btn-secondary me-2" style="width: 6rem;"><a href="#create_review" style="text-decoration:none; color:white;">Review</a></button>
             <button class="btn btn-outline-light" style="width: 6rem;"><i class="fa-solid fa-basket-shopping"></i></button>
           </div>
           <a href="{% url 'movies:movies' %}" class="btn btn-dark" style="width: 6rem;">Back</a>
@@ -37,89 +37,48 @@
         <img src="{{ movie.poster_path }}" alt="" style="height: 50vh; border-radius: 2%;">
       </div>
     </div>
-
-
-
-
-
-    <!-- 이미지 리스트 작업중 -->
-
-
-
-
-    {% comment %} <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="{{ img_movie_first.img }}" class="d-block w-100" alt="...">
-        </div>
-        {% for img_movie in img_movies %}
-        <div class="carousel-item" class="width: 90vw; height: 10vh;">
-          <img src="{{ img_movie.img }}" class="d-block w-100" alt="...">
-        </div>
-        {% endfor %}
+    
+    <h3 class="text-light fw-bold mb-3">Trailer</h3>
+    <div class="row row-cols-4 mb-5">
+      {% for video in video_list %}
+      <div class="col mb-5" style="width: 36vw; height: 50vh;">
+        <iframe  frameborder="0" height="100%" width="100%"
+        src="{{ video.video }}" 
+        allowfullscreen>
+        </iframe>
       </div>
-    </div> {% endcomment %}
+    {% endfor %}
+    </div>
+    
 
-
-
-
-    <h3 class="text-light fw-bold mb-3">Related Images</h3>
+    <h3 class="text-light fw-bold mb-3">Screen shot</h3>
     <div class="row row-cols-4 mb-5">
       {% for img_movie in img_movies %}
-      <div class="col mb-2" style="width: 13vw; height: 25vh;">
+      <div class="col mb-5" style="width: 16vw; height: 30vh;">
         <img src="{{ img_movie.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
       </div>
       {% endfor %}
     </div>
 
 
-    <h3 class="text-light fw-bold mb-3">Actor Images</h3>
+    <h3 class="text-light fw-bold mb-3">Actors</h3>
     <div class="row row-cols-5 mb-5">
       {% for img_actor in img_actors %}
       <div class="col mb-2" style="width: 13vw; height: 25vh;">
         <img src="{{ img_actor.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
+        <h5 style="color:white; text-align:center;">{{img_actor.name}}</h5>
       </div>
       {% endfor %}
     </div>
-
-    
-    <h3 class="text-light fw-bold mb-3">Director Image</h3>
-    <div class="row row-cols-5 mb-5">
-      <div class="col mb-2" style="overflow: hidden; height: 100px;">
-        <img src="{{ img_director.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-    {% comment %} <div class="container-fluid d-flex justify-content-between">
-      {% for img_movie in img_movies %}
-      <img src="{{ img_movie.img }}" alt="사진">
-      {% endfor %}
-    </div>
-    <div class="container-fluid d-flex justify-content-between">
-      {% for img_actor in img_actors %}
-      <img src="{{ img_actor.img }}" alt="사진">
-      {% endfor %}
-    </div>
-    <div class="container-fluid d-flex justify-content-between">
-      <img src="{{ img_director }}" alt="">
-    </div> {% endcomment %}
   </div>
 
-
-
-
+  <hr>
 
   <div class="container-xxl" style="background-color: #000;">
     <div class="card" style="border: none;">
       <div class="card-body" style="background-color: #000;">
         <!-- 리뷰 목록 -->
+        <a name="create_review">
         {% if movie.review_set.count > 0 %}
         <div class="container-fluid">
           {% for review in movie.review_set.all %}
@@ -205,7 +164,6 @@
   </div>
   <div class="container-xxl py-3" style="background-color: #000;">
     <div class="container-fluid">
-
       <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3">
         {% csrf_token %}
         <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
@@ -224,488 +182,37 @@
 </div>
 
 
-<style>
-.detail-wrap {
-  background-image: linear-gradient(rgb(20, 20, 20), transparent, rgb(20, 20, 20)), url("{{ movie.poster_path }}");
-  background-image: linear-gradient(rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 0.90)), url("{{ movie.poster_path }}");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-
-}
-</style>
-{% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 좋아요 버튼, 좋아요 수, 댓글 수 -->
-<div class="d-flex border-bottom my-2">
-  <!-- 좋아요 버튼 -->
-  {% if request.user.is_authenticated %}
-  <form class="like-form p-0" data-article-id="{{ article.pk }}">
-    {% csrf_token %}
-    {% if user in article.like_users.all %}
-    <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4"><i class="fa fa-solid fa-heart text-danger"></i></button>
-    {% else %}
-    <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4"><i class="fa fa-regular fa-heart text-secondary"></i></button>
-    {% endif %}
-  </form>
-  {% endif %}
-  <!-- 좋아요 수 -->
-  <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
-    <span class="text-secondary">
-      좋아요
-    </span>
-    <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
-      {{ article.like_users.all|length }}
-    </span>
-  </div>
-  <!-- 댓글 아이콘 -->
-  <div class="d-flex justify-content-center align-items-center me-2">
-    <i class="fa fa-regular fa-comment text-secondary"></i>
-  </div>
-  <!-- 댓글 수 -->
-  <div class="d-flex align-items-center justify-content-center p-0 m-0">
-    <span class="text-secondary">
-      댓글
-    </span>
-    <span class="ms-2 text-light fw-bold">
-      {{ article.comment_set.all.count }}
-    </span>
-  </div>
-</div>
-
-
-<div class="card bg-dark" style="border: none;">
-  <div class="card-body bg-dark">
-    <!-- 댓글 목록 -->
-    {% if article.comment_set.count > 0 %}
-    <div class="container">
-      {% for comment in article.comment_set.all %}
-      <div class="comment py-2">
-        <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <!-- 작성자 -->
-            <a href="{% url 'accounts:profile' comment.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ comment.user.username }}</a>
-            <!-- 작성일 -->
-            <span class="small text-secondary">
-              {{ comment.created_at|date:'y-m-d H:i' }}
-            </span>
-            <!-- 수정일 -->
-            {% if comment.updated_at %}
-            <span class="small text-secondary">
-               | {{ comment.updated_at|date:'y-m-d H:i' }}
-            </span>
-            {% endif %}
-          </div>
-          <!-- 수정, 삭제 버튼 -->
-          <div class="d-flex justify-content-end align-items-center">
-            {% if request.user == comment.user %}
-            {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="text-info">Update</button>
-            </form> {% endcomment %}
-            <!-- 수정 -->
-            {% comment %} <form action="#" method="get" class="me-2">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-secondary">Update</button>
-            </form> {% endcomment %}
-            <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
-            <!-- 삭제 -->
-            <!-- Button trigger modal -->
-            <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
-              Delete
-            </button>
-            <!-- Modal -->
-            <div class="modal fade" id="commentDeleteButton" tabindex="-1" aria-labelledby="commentDeleteButtonLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                  <div class="modal-header" style="border: none;">
-                    <h5 class="modal-title text-light" id="commentDeleteButtonLabel">Delete</h5>
-                    <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body text-light">
-                    Are you sure you want to delete it?
-                  </div>
-                  <div class="modal-footer" style="border: none;">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% comment %} <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
-            </form> {% endcomment %}
-            {% endif %}
-          </div>
-        </div>
-        <!-- 내용 -->
-        <span class="text-light small">
-          {{ comment.content|linebreaksbr }}
-        </span>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    <!-- 댓글 작성 -->
-    <div class="container my-3">
-      <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
-        {% csrf_token %}
-        <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
-        <button type="submit" class="btn btn-danger fw-bold">Create</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-<div class="wrapper">
-	<div class="main_card">
-		<div class="card_left">
-			<div class="card_datails">
-				<h1>{{ movie.title }}</h1>
-				<div class="card_cat">
-					<p class="PG" style="color:red;">
-            {{ movie.popularity }} p
-          </p>
-					<p class="year">{{ movie.release_date }}</p>
-					<p class="genre">
-            {% for genre in genres %}
-              {{ genre }}
-            {% endfor %}
-          </p>
-					<p class="time">2h 28m</p>
-				</div>
-        <div style="height:180px; overflow: hidden;">
-            {{ movie.overview }}
-        </div>
-			<div class="social-btn">
-        <button class='post_btn'>
-          <a href="{% url 'articles:articles' %}" style="text-decoration:none; color:white;">
-            <i class="fa-solid fa-comments"></i> Community
-          </a>
-        </button>
-				<button class='post_btn'>
-					<i class="fas fa-thumbs-up"></i> like it
-				</button>
-        <button class='post_btn'>
-					<i class="fa-solid fa-basket-shopping"></i> get it
-				</button>
-			</div>	
-			</div>
-		</div>
-		<div  class="card_right">
-			<img src="{{ movie.poster_path }}"style="max-width:100%; max-height:100%;" alt="포스터">
-			<div class="play_btn">
-					<i class="fas fa-play-circle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
-			</div>
-	  </div>
-  </div>
-
-  <dib class="main_card">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="{{ img_movies_first.thumbnail }}" class="d-block w-100" alt="...">
-        </div>
-        {% for img in img_movies %}
-          <div class="carousel-item">
-            <img src="{{ img.thumbnail }}" class="d-block w-100" alt="...">
-          </div>
-        {% endfor %}
-        
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="main_card">
-    <div>
-      <p class="PG" style="color:red;">{{ movie.director }} (감독)</p>
-      <img src="{{ img_director }}" alt="이미지">
-    </div>
-    {% for actor in img_actors %}
-      <div>
-        <p class="PG" style="color:red;">{{ actor.name }}</p>
-        <img src="{{ actor.img }}" alt="배우 이미지">
-      </div>
-    {% endfor %}
-  </div>
-
-  <div class="main_card">
-    {{ review_form }}
-    {{ review_set }}
-  </div>
-
-</div>
-
-{% comment %} 오른쪽 상세 영상 조회 {% endcomment %}
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-  <div class="offcanvas-header">
-    <h5 id="offcanvasRightLabel"></h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    {% for video in video_list %}
-      <div>
-        <iframe  frameborder="0" height="100%" width="100%"
-        src="{{ video.video }}" 
-        allowfullscreen>
-        </iframe>
-        {{ video.title }}<br>
-        {{ video.date }}
-        <hr>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-
-
-
-
-{% comment %} 오른쪽 아래 추천페이지 이동 {% endcomment %}
 <a class="Follow" href="{% url 'movies:for_you' movie.pk %}"></a>
 
 
-
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
+  .detail-wrap {
+    background-image: linear-gradient(rgb(20, 20, 20), transparent, rgb(20, 20, 20)), url("{{ movie.poster_path }}");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 0.90)), url("{{ movie.poster_path }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
   }
-  
-  .main_card {
-    color: #fff;
-    width: 90%;
-    height: 30%;
-    margin: 50px auto;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    max-width: 95%;
-    background: #00C9FF; 
-    background: -webkit-linear-gradient(to right, #808080, #404040);
-    background: -webkit-gradient(linear, left top, right top, from(#808080), to(#404040));
-    background: -webkit-linear-gradient(left, #808080, #404040);
-    background: -o-linear-gradient(left, #808080, #404040);
-    background: linear-gradient(to right, #808080, #404040); 
-    -webkit-box-shadow: 0 0 40px rgba(0,0,0,0.3); 
-            box-shadow: 0 0 40px rgba(0,0,0,0.3);
-  }
-  
-  .card_left {
-    width: 100%;
-  }
-  
-
-  .card_datails {
-    width: 90%;
-    padding: 30px;
-    margin-top: -10px;
-  }
-  .card_datails  h1 {
-    font-size: 30px;
-    margin-bottom:20px;
-  }
-  .card_right img {
-    width: 100%;
-    border-radius: 2px;
-  }
-  .card_right {
-    border-radius: 2px;
-  }
-  
-  .card_cat {
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-  }
-  
-  
-  .PG, .year, .genre, .time {
-    color: fff;
-    padding: 10px;
-    font-weight: bold;
-    border-radius: 15px;
-  }
-  
-  .PG {
-    background: #ffffff;
-    -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.1);
-            box-shadow: 0 0 50px rgba(0,0,0,0.1);
-    -webkit-transition: 300ms ease-in-out;
-  }
-  
-  .disc {
-    font-weight: 100;
-    line-height: 27px;
-  }
-  a {
-    color: darkcyan;
-    display: block;
-    text-decoration: none;
-  }
-  .social-btn {
-    margin-left: 10px;
-  }
-  .post_btn {
-    color: white;
-    border: none;
-    padding: 10px;
-    outline: none;
-    font-size: 12px;
-    margin-top: 30px;
-    margin-left: 10px;
-    background: #DB3838;
-    border-radius: 12px;
-    -webkit-box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    -webkit-transition: 300ms ease-in-out;
-    -o-transition: 200ms ease-in-out;
-    transition: 200ms ease-in-out;
-  }
-  
-  button:hover {
-    -webkit-transform: scale(1.1);
-        -ms-transform: scale(1.1);
-            transform: scale(1.1);
-  }
-  .play_btn {
-    height: 100%;
-    margin: -394px auto;
-    position: relative;
-    text-align: center;
-    box-shadow: 0 0 50px rgba(0,0,0,0.2);
-  }
-  .fa-play-circle {
-    color: #DB3838;
-    font-size: 50px;
-    margin-top: 180px;
-    -webkit-animation: bounce 1.0s -0.4s infinite;
-            animation: bounce 1.0s -0.4s infinite;
-  }
-  
-  .fa-play-circle:hover {
-    color: #DB3838;
-    animation: bounce 0.4s infinite;
-  }
-  @-webkit-keyframes bounce {
-    8% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.8);
-      opacity: 1;
-    }
-    10% {
-      transform: scale(1.8);
-      -webkit-transform: scale2);
-      opacity: 0;
-      }
-  }
-  
-  @keyframes bounce {
-    8% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.8);
-      opacity: 1;
-    }
-    20% {
-      transform: scale(1.8);
-      -webkit-transform: scale2);
-      opacity: 0;
-      }
-  }
-  
-  
-  
-  
-  
 
   .Follow { background:url("https://user-images.githubusercontent.com/89068148/169769128-9e6d8773-ff93-4e66-8da5-4b953a6a3a25.jpeg")no-repeat center / contain;
-    width: 50px;
-    height: 50px;
-    bottom: 9px;
-    right: 20px;
-    display:block;
-    position:fixed;
-    border-radius:50%;
-    z-index:999;
-    animation:  rotation 10s infinite linear;
-    }
-  
+  width: 80px;
+  height: 80px;
+  bottom: 9px;
+  right: 20px;
+  display:block;
+  position:fixed;
+  border-radius:50%;
+  z-index:999;
+  animation:  rotation 10s infinite linear;
+  }
+
   @-webkit-keyframes rotation {
-      from {
-          -webkit-transform: rotate(0deg);
-      }
-      to {
-          -webkit-transform: rotate(359deg);
-      }
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+    }
   }
 </style>
+{% endblock %}

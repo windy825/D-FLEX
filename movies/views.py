@@ -26,45 +26,42 @@ def movies(request):
 @require_safe
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    genres = movie.genres.strip('[]').replace("'",'').split(',')[:3]
+    genres = movie.genres.strip('[]').replace("'",'').split(',')[:4]
     movie.overview = movie.overview
     form = ReviewForm()
 
     # 영상 리스트 by youtube api
-    # from googleapiclient.discovery import build
-    # DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
-    # YOUTUBE_API_SERVICE_NAME="youtube"
-    # YOUTUBE_API_VERSION="v3"
-    # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    from googleapiclient.discovery import build
+    DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
+    YOUTUBE_API_SERVICE_NAME="youtube"
+    YOUTUBE_API_VERSION="v3"
+    youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-    # search_response_data = youtube.search().list(
-    # q = movie.title + '영화',
-    # order = "relevance",
-    # fields = "items(id)",
-    # part = "snippet",
-    # maxResults = 10
-    # ).execute()['items']
+    search_response_data = youtube.search().list(
+    q = movie.title + '영화',
+    order = "relevance",
+    fields = "items(id)",
+    part = "snippet",
+    maxResults = 6
+    ).execute()['items']
 
-    # video_list = []
-    # for item in search_response_data:
-    #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-    #     title = item['snippet']['title']
-    #     video_list.append({'video':video, 'title':title, })
+    video_list = []
+    for item in search_response_data:
+        video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+        video_list.append({'video':video})
 
-    import os
-    import sys
+
     import urllib.request
     import json
     client_id = "MB8drhevCnawoQjOxc5S"
     client_secret = "D9wdXNLZar"
 
-    encText = urllib.parse.quote(movie.title)
+    encText = urllib.parse.quote(movie.title+'명장면')
     url = "https://openapi.naver.com/v1/search/image?query=" + encText
     request1 = urllib.request.Request(url)
     request1.add_header("X-Naver-Client-Id",client_id)
     request1.add_header("X-Naver-Client-Secret",client_secret)
     response = urllib.request.urlopen(request1)
-    rescode = response.getcode()
 
     response_body = response.read()
     str_data = response_body.decode('utf-8')
@@ -72,27 +69,15 @@ def movie_detail(request, movie_pk):
     
     img_movies = []
     for item in json_data['items']:
-        img_movies.append({ 'img': item['thumbnail'] })
+        if item['thumbnail']:
+            img_movies.append({ 'img': item['thumbnail'] })
    
-    # 감독 정보 이미지 크롤링
-    encText = urllib.parse.quote(movie.director+' 감독')
-    url = "https://openapi.naver.com/v1/search/image?query=" + encText
-    request1 = urllib.request.Request(url)
-    request1.add_header("X-Naver-Client-Id",client_id)
-    request1.add_header("X-Naver-Client-Secret",client_secret)
-    response = urllib.request.urlopen(request1)
-    
-    response_body = response.read()
-    answer = response_body.decode('utf-8')
-    answer = json.loads(answer)
-    img_director = answer['items'][0]['thumbnail'] if answer['items'] else []
-
 
     # 배우정보 크롤링
     img_actors = []
     for actor in movie.actors.strip('[]').split(','):
         actor = actor.strip("''")
-        encText = urllib.parse.quote(actor)
+        encText = urllib.parse.quote(actor+'얼굴')
         url = "https://openapi.naver.com/v1/search/image?query=" + encText
         request1 = urllib.request.Request(url)
         request1.add_header("X-Naver-Client-Id",client_id)
@@ -102,6 +87,8 @@ def movie_detail(request, movie_pk):
         response_body = response.read()
         answer = response_body.decode('utf-8')
         answer = json.loads(answer)
+        if not answer['items']:
+            continue
         answer = answer["items"][0]['thumbnail'] if answer['items'] else []
         
         img_actors.append({
@@ -113,11 +100,8 @@ def movie_detail(request, movie_pk):
         'movie': movie,
         'review_form': form,
         'genres':genres,
-        'search_response_data':[],
-        # 'video_list':video_list,
-        'img_movies_first':img_movies[0],
-        'img_movies':img_movies[1:],
-        'img_director':img_director,
+        'video_list':video_list,
+        'img_movies':img_movies,
         'img_actors':img_actors,
     }
     return render(request, 'movies/movie_detail.html', context)
@@ -159,6 +143,31 @@ def for_you(request, movie_pk):
     pick_movie = get_object_or_404(Movie, pk=movie_pk)
     movies = Movie.objects.all()
     movies = [movie for movie in movies if movie.pk != movie_pk]
+    
+
+    # 배우 사진 찾기
+    import urllib.request
+    import json
+    client_id = "MB8drhevCnawoQjOxc5S"
+    client_secret = "D9wdXNLZar"
+
+    actor_info = []
+    for actor in pick_movie.actors:
+        actor = actor.strip("''")
+        encText = urllib.parse.quote(actor+'얼굴')
+        url = "https://openapi.naver.com/v1/search/image?query=" + encText
+        request1 = urllib.request.Request(url)
+        request1.add_header("X-Naver-Client-Id",client_id)
+        request1.add_header("X-Naver-Client-Secret",client_secret)
+        response = urllib.request.urlopen(request1)
+            
+        response_body = response.read()
+        answer = response_body.decode('utf-8')
+        answer = json.loads(answer)
+# answer["items"][0]['thumbnail']
+        # if not answer['items']:
+        #     actor_info.append('actor':'https://user-images.githubusercontent.com/89068148/170207316-c4fe2034-c9c1-4829-b0d3-ac3d56147fee.jpg')
+
 
     # 배우 기반 추천
     actors = pick_movie.actors
@@ -175,7 +184,6 @@ def for_you(request, movie_pk):
                 recommend_movies_by_actors.append({'actor':actor, 'movie':movie})
                 flag = 1
                 break
-    print(recommend_movies_by_actors)
     
     # 장르 기반 추천
     genres = pick_movie.genres
