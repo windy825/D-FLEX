@@ -1,219 +1,221 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container my-5 bg-dark">
-  <!-- 제목, 작성일 -->
-  <div class="d-flex border-bottom p-3">
-    <!-- 제목 -->
-    <div class="col">
-      <h2 class="text-light mb-0">
-        {{ article.title }}
-      </h2>
-    </div>
-    <!-- 작성일 -->
-    <div class="col d-flex justify-content-end align-items-center">
-      <span class="text-secondary small ms-auto">
-        {{ article.created_at|date:'y-m-d H:i' }}
-      </span>
-    </div>
-  </div>
-  <!-- 작성자, 수정일 -->
-  <div class="row px-3 py-2">
-    <!-- 작성자 -->
-    <div class="col">
-      <a href="{% url 'accounts:profile' article.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ article.user.username }}</a>
-    </div>
-    <!-- 수정일 -->
-    <div class="col d-flex justify-content-end align-items-center">
-      {% if article.updated_at %}
-      <span class="text-secondary small ms-auto">
-        {{ article.updated_at|date:'y-m-d H:i' }}
-      </span>
-      {% endif %}
-    </div>
-  </div>
-  <!-- 게시글 row -->
-  <div class="row my-3">
-    <div class="card bg-dark" style="border: none;">
-      <!-- 내용 -->
-      <div class="card-body bg-dark">
-        <div class="card-text mb-2 text-light">
-          {{ article.content|linebreaks }}
-        </div>
+<div class="container-fluid" style="height: 81vh;">
+  <div class="container my-5 bg-dark">
+    <!-- 제목, 작성일 -->
+    <div class="d-flex border-bottom p-3">
+      <!-- 제목 -->
+      <div class="col">
+        <h2 class="text-light mb-0">
+          {{ article.title }}
+        </h2>
       </div>
-      <div class="container d-flex justify-content-between align-items-center px-0">
-        <!-- 수정, 삭제 버튼 -->
-        {% if request.user == article.user %}
-        <div class="d-flex justify-content-start my-3">
-          <div class="me-2">
-            <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-dark btn-outline-secondary p-2 fw-bold">
-              Update
-            </a>
+      <!-- 작성일 -->
+      <div class="col d-flex justify-content-end align-items-center">
+        <span class="text-secondary small ms-auto">
+          {{ article.created_at|date:'y-m-d H:i' }}
+        </span>
+      </div>
+    </div>
+    <!-- 작성자, 수정일 -->
+    <div class="row px-3 py-2">
+      <!-- 작성자 -->
+      <div class="col">
+        <a href="{% url 'accounts:profile' article.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ article.user.username }}</a>
+      </div>
+      <!-- 수정일 -->
+      <div class="col d-flex justify-content-end align-items-center">
+        {% if article.updated_at %}
+        <span class="text-secondary small ms-auto">
+          {{ article.updated_at|date:'y-m-d H:i' }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+    <!-- 게시글 row -->
+    <div class="row my-3">
+      <div class="card bg-dark" style="border: none;">
+        <!-- 내용 -->
+        <div class="card-body bg-dark">
+          <div class="card-text mb-2 text-light">
+            {{ article.content|linebreaks }}
           </div>
-          <!-- Button trigger modal -->
-          <button type="submit" class="btn btn-outline-secondary p-2 fw-bold" data-bs-toggle="modal" data-bs-target="#articleDeleteButton">
-            Delete
-          </button>
-          <!-- Modal -->
-          <div class="modal fade" id="articleDeleteButton" tabindex="-1" aria-labelledby="articleDeleteButtonLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content bg-dark">
-                <div class="modal-header" style="border: none;">
-                  <h5 class="modal-title text-light" id="articleDeleteButtonLabel">Delete</h5>
-                  <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-light">
-                  Are you sure you want to delete it?
-                </div>
-                <div class="modal-footer" style="border: none;">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <form action="{% url 'articles:article_delete' article.pk %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
-                </div>
-              </div>
+        </div>
+        <div class="container d-flex justify-content-between align-items-center px-0">
+          <!-- 수정, 삭제 버튼 -->
+          {% if request.user == article.user %}
+          <div class="d-flex justify-content-start my-3">
+            <div class="me-2">
+              <a href="{% url 'articles:article_update' article.pk %}" class="btn btn-dark btn-outline-secondary p-2 fw-bold">
+                Update
+              </a>
             </div>
-          </div>
-          {% comment %} <form action="{% url 'articles:article_delete' article.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary p-2 fw-bold">
+            <!-- Button trigger modal -->
+            <button type="submit" class="btn btn-outline-secondary p-2 fw-bold" data-bs-toggle="modal" data-bs-target="#articleDeleteButton">
               Delete
             </button>
-          </form> {% endcomment %}
-        </div>
-        {% endif %}
-        <!-- 목록으로 -->
-        <div class="my-3">
-          <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-dark btn-outline-secondary p-2 px-3 text-secondary fw-bold">Back</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- 좋아요 버튼, 좋아요 수, 댓글 수 -->
-  <div class="d-flex border-bottom my-2">
-    <!-- 좋아요 버튼 -->
-    {% if request.user.is_authenticated %}
-    <form class="like-form p-0" data-article-id="{{ article.pk }}">
-      {% csrf_token %}
-      {% if user in article.like_users.all %}
-      <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4"><i class="fa fa-solid fa-heart text-danger"></i></button>
-      {% else %}
-      <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4"><i class="fa fa-regular fa-heart text-secondary"></i></button>
-      {% endif %}
-    </form>
-    {% endif %}
-    <!-- 좋아요 수 -->
-    <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
-      <span class="text-secondary">
-        좋아요
-      </span>
-      <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
-        {{ article.like_users.all|length }}
-      </span>
-    </div>
-    <!-- 댓글 아이콘 -->
-    <div class="d-flex justify-content-center align-items-center me-2">
-      <i class="fa fa-regular fa-comment text-secondary"></i>
-    </div>
-    <!-- 댓글 수 -->
-    <div class="d-flex align-items-center justify-content-center p-0 m-0">
-      <span class="text-secondary">
-        댓글
-      </span>
-      <span class="ms-2 text-light fw-bold">
-        {{ article.comment_set.all.count }}
-      </span>
-    </div>
-  </div>
-
-
-  <div class="card bg-dark" style="border: none;">
-    <div class="card-body bg-dark">
-      <!-- 댓글 목록 -->
-      {% if article.comment_set.count > 0 %}
-      <div class="container-fluid">
-        {% for comment in article.comment_set.all %}
-        <div class="comment py-2">
-          <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <!-- 작성자 -->
-              <a href="{% url 'accounts:profile' comment.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ comment.user.username }}</a>
-              <!-- 작성일 -->
-              <span class="small text-secondary">
-                {{ comment.created_at|date:'y-m-d H:i' }}
-              </span>
-              <!-- 수정일 -->
-              {% if comment.updated_at %}
-              <span class="small text-secondary">
-                 | {{ comment.updated_at|date:'y-m-d H:i' }}
-              </span>
-              {% endif %}
-            </div>
-            <!-- 수정, 삭제 버튼 -->
-            <div class="d-flex justify-content-end align-items-center">
-              {% if request.user == comment.user %}
-              {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="text-info">Update</button>
-              </form> {% endcomment %}
-              <!-- 수정 -->
-              {% comment %} <form action="#" method="get" class="me-2">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-secondary">Update</button>
-              </form> {% endcomment %}
-              <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
-              <!-- 삭제 -->
-              <!-- Button trigger modal -->
-              <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
-                Delete
-              </button>
-              <!-- Modal -->
-              <div class="modal fade" id="commentDeleteButton" tabindex="-1" aria-labelledby="commentDeleteButtonLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content bg-dark">
-                    <div class="modal-header" style="border: none;">
-                      <h5 class="modal-title text-light" id="commentDeleteButtonLabel">Delete</h5>
-                      <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-light">
-                      Are you sure you want to delete it?
-                    </div>
-                    <div class="modal-footer" style="border: none;">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                      </form>
-                    </div>
+            <!-- Modal -->
+            <div class="modal fade" id="articleDeleteButton" tabindex="-1" aria-labelledby="articleDeleteButtonLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content bg-dark">
+                  <div class="modal-header" style="border: none;">
+                    <h5 class="modal-title text-light" id="articleDeleteButtonLabel">Delete</h5>
+                    <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-light">
+                    Are you sure you want to delete it?
+                  </div>
+                  <div class="modal-footer" style="border: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'articles:article_delete' article.pk %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                   </div>
                 </div>
               </div>
-              {% comment %} <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
-              </form> {% endcomment %}
-              {% endif %}
             </div>
+            {% comment %} <form action="{% url 'articles:article_delete' article.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary p-2 fw-bold">
+                Delete
+              </button>
+            </form> {% endcomment %}
           </div>
-          <!-- 내용 -->
-          <span class="text-light small">
-            {{ comment.content|linebreaksbr }}
-          </span>
+          {% endif %}
+          <!-- 목록으로 -->
+          <div class="my-3">
+            <a href="{% url 'articles:articles' %}" class="btn btn-sm btn-dark btn-outline-secondary p-2 px-3 text-secondary fw-bold">Back</a>
+          </div>
         </div>
-        {% endfor %}
       </div>
+    </div>
+  
+  
+    <!-- 좋아요 버튼, 좋아요 수, 댓글 수 -->
+    <div class="d-flex border-bottom my-2">
+      <!-- 좋아요 버튼 -->
+      {% if request.user.is_authenticated %}
+      <form class="like-form p-0" data-article-id="{{ article.pk }}">
+        {% csrf_token %}
+        {% if user in article.like_users.all %}
+        <button id="like-{{ article.pk }}" class="btn btn-link text-danger text-decoration-none fs-4"><i class="fa fa-solid fa-heart text-danger"></i></button>
+        {% else %}
+        <button id="like-{{ article.pk }}" class="btn btn-link text-secondary text-decoration-none fs-4"><i class="fa fa-regular fa-heart text-secondary"></i></button>
+        {% endif %}
+      </form>
       {% endif %}
-      <!-- 댓글 작성 -->
-      <div class="container my-3">
-        <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
-          {% csrf_token %}
-          <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
-          <button type="submit" class="btn btn-danger fw-bold">Create</button>
-        </form>
+      <!-- 좋아요 수 -->
+      <div class="d-flex align-items-center justify-content-center p-0 m-0 me-3">
+        <span class="text-secondary">
+          좋아요
+        </span>
+        <span id="like-count-{{ article.pk }}" class="ms-2 text-light fw-bold">
+          {{ article.like_users.all|length }}
+        </span>
+      </div>
+      <!-- 댓글 아이콘 -->
+      <div class="d-flex justify-content-center align-items-center me-2">
+        <i class="fa fa-regular fa-comment text-secondary"></i>
+      </div>
+      <!-- 댓글 수 -->
+      <div class="d-flex align-items-center justify-content-center p-0 m-0">
+        <span class="text-secondary">
+          댓글
+        </span>
+        <span class="ms-2 text-light fw-bold">
+          {{ article.comment_set.all.count }}
+        </span>
+      </div>
+    </div>
+  
+  
+    <div class="card bg-dark" style="border: none;">
+      <div class="card-body bg-dark">
+        <!-- 댓글 목록 -->
+        {% if article.comment_set.count > 0 %}
+        <div class="container-fluid">
+          {% for comment in article.comment_set.all %}
+          <div class="comment py-2">
+            <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <!-- 작성자 -->
+                <a href="{% url 'accounts:profile' comment.user.username %}" class="text-secondary text-decoration-none fw-bold">{{ comment.user.username }}</a>
+                <!-- 작성일 -->
+                <span class="small text-secondary">
+                  {{ comment.created_at|date:'y-m-d H:i' }}
+                </span>
+                <!-- 수정일 -->
+                {% if comment.updated_at %}
+                <span class="small text-secondary">
+                   | {{ comment.updated_at|date:'y-m-d H:i' }}
+                </span>
+                {% endif %}
+              </div>
+              <!-- 수정, 삭제 버튼 -->
+              <div class="d-flex justify-content-end align-items-center">
+                {% if request.user == comment.user %}
+                {% comment %} <form action="{% url 'articles:comment_update' article.pk comment.pk %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="text-info">Update</button>
+                </form> {% endcomment %}
+                <!-- 수정 -->
+                {% comment %} <form action="#" method="get" class="me-2">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-secondary">Update</button>
+                </form> {% endcomment %}
+                <a href="{% url 'articles:comment_update' article.pk comment.pk %}" class="btn btn-sm  btn-outline-secondary me-2">Update</a>
+                <!-- 삭제 -->
+                <!-- Button trigger modal -->
+                <button type="submit" class="btn btn-sm  btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentDeleteButton">
+                  Delete
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="commentDeleteButton" tabindex="-1" aria-labelledby="commentDeleteButtonLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                      <div class="modal-header" style="border: none;">
+                        <h5 class="modal-title text-light" id="commentDeleteButtonLabel">Delete</h5>
+                        <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-light">
+                        Are you sure you want to delete it?
+                      </div>
+                      <div class="modal-footer" style="border: none;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% comment %} <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-dark text-secondary">Delete</button>
+                </form> {% endcomment %}
+                {% endif %}
+              </div>
+            </div>
+            <!-- 내용 -->
+            <span class="text-light small">
+              {{ comment.content|linebreaksbr }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 댓글 작성 -->
+        <div class="container my-3">
+          <form action="{% url 'articles:comment_create' article.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ article.pk }}">
+            {% csrf_token %}
+            <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ comment_form.content.value|default_if_none:'' }}</textarea>
+            <button type="submit" class="btn btn-danger fw-bold">Create</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

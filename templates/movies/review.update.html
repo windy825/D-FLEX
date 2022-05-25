@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2 class="my-3 border-bottom pb-2 text-secondary fw-bold">Review Update</h2>
+  <form method="post" class="post-form my-3">
+    {% csrf_token %}
+    <div class="form-group my-3">
+      <label for="content" class="form-label text-secondary">Content</label>
+      <textarea name="content" id="content" cols="5" rows="3" class="form-contro bg-secondary text-light">{{ review_form.content.value|default_if_none:'' }}</textarea>
+      <label for="rating" class="form-label text-secondary">Rating</label>
+      <select class="form-select bg-dark text-light" name="rating"  aria-label="here">
+        <option selected>별점을 매기세요</option>
+        <option value=1>★☆☆☆☆</option>
+        <option value=2>★★☆☆☆</option>
+        <option value=3>★★★☆☆</option>
+        <option value=4>★★★★☆</option>
+        <option value=5>★★★★★</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Update</button>
+    <a href="{% url 'movies:movie_detail' movie.pk %}" class="btn btn-secondary fw-bold" style="width: 6rem;">Back</a>
+  </form>
+</div>
+{% endblock %}
