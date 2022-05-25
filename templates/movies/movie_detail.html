@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="detail-wrap container-fluid">
+<div class="detail-wrap container-fluid" style="padding-bottom: 150vh;">
   <!-- 정보 -->
   <div class="movie-info container-xxl mb-4">
     <!-- 제목 -->
@@ -19,7 +19,7 @@
       </div>
     </div>
     <!-- 줄거리, 버튼, 포스터 -->
-    <div class="container-fluid d-flex justify-content-between">
+    <div class="container-fluid d-flex justify-content-between mb-5">
       <div class="container-fluid ps-0 pe-5 me-5">
         <div class="mb-5">
           <span class="text-light">{{ movie.overview }}</span>
@@ -37,21 +37,89 @@
         <img src="{{ movie.poster_path }}" alt="" style="height: 50vh; border-radius: 2%;">
       </div>
     </div>
-    <div class="container-fluid">
+
+
+
+
+
+    <!-- 이미지 리스트 작업중 -->
+
+
+
+
+    {% comment %} <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{{ img_movie_first.img }}" class="d-block w-100" alt="...">
+        </div>
+        {% for img_movie in img_movies %}
+        <div class="carousel-item" class="width: 90vw; height: 10vh;">
+          <img src="{{ img_movie.img }}" class="d-block w-100" alt="...">
+        </div>
+        {% endfor %}
+      </div>
+    </div> {% endcomment %}
+
+
+
+
+    <h3 class="text-light fw-bold mb-3">Related Images</h3>
+    <div class="row row-cols-4 mb-5">
+      {% for img_movie in img_movies %}
+      <div class="col mb-2" style="width: 13vw; height: 25vh;">
+        <img src="{{ img_movie.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      {% endfor %}
+    </div>
+
+
+    <h3 class="text-light fw-bold mb-3">Actor Images</h3>
+    <div class="row row-cols-5 mb-5">
+      {% for img_actor in img_actors %}
+      <div class="col mb-2" style="width: 13vw; height: 25vh;">
+        <img src="{{ img_actor.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      {% endfor %}
+    </div>
+
+    
+    <h3 class="text-light fw-bold mb-3">Director Image</h3>
+    <div class="row row-cols-5 mb-5">
+      <div class="col mb-2" style="overflow: hidden; height: 100px;">
+        <img src="{{ img_director.img }}" alt="포스터 이미지" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    {% comment %} <div class="container-fluid d-flex justify-content-between">
       {% for img_movie in img_movies %}
       <img src="{{ img_movie.img }}" alt="사진">
       {% endfor %}
     </div>
+    <div class="container-fluid d-flex justify-content-between">
+      {% for img_actor in img_actors %}
+      <img src="{{ img_actor.img }}" alt="사진">
+      {% endfor %}
+    </div>
+    <div class="container-fluid d-flex justify-content-between">
+      <img src="{{ img_director }}" alt="">
+    </div> {% endcomment %}
   </div>
 
 
 
 
 
-  <div class="container-xxl">
-    <div class="card bg-dark" style="border: none;">
-      <div class="card-body bg-dark">
-        <!-- 댓글 목록 -->
+  <div class="container-xxl" style="background-color: #000;">
+    <div class="card" style="border: none;">
+      <div class="card-body" style="background-color: #000;">
+        <!-- 리뷰 목록 -->
         {% if movie.review_set.count > 0 %}
         <div class="container-fluid">
           {% for review in movie.review_set.all %}
@@ -110,18 +178,17 @@
               </div>
             </div>
             <!-- 평점 -->
-            <i class="fa-regular fa-star"></i>
             <div class="text-danger fw-bold small">
               {% if review.rating == 1 %}
-              ★☆☆☆☆
+              <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
               {% elif review.rating == 2 %}
-              ★★☆☆☆
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
               {% elif review.rating == 3 %}
-              ★★★☆☆
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
               {% elif review.rating == 4 %}
-              ★★★★☆
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
               {% else %}
-              ★★★★★
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
               {% endif %}
             </div>
             <!-- 내용 -->
@@ -136,20 +203,23 @@
       </div>
     </div>
   </div>
-  <div class="container-xxl my-3">
-    <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
-      {% csrf_token %}
-      <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
-      <select class="form-select bg-dark text-light" name="rating"  aria-label="here">
-        <option selected>별점을 매기세요</option>
-        <option value=1>★☆☆☆☆</option>
-        <option value=2>★★☆☆☆</option>
-        <option value=3>★★★☆☆</option>
-        <option value=4>★★★★☆</option>
-        <option value=5>★★★★★</option>
-      </select>
-      <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button>
-    </form>
+  <div class="container-xxl py-3" style="background-color: #000;">
+    <div class="container-fluid">
+
+      <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3">
+        {% csrf_token %}
+        <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
+        <select class="form-select bg-dark text-light mb-3" name="rating">
+          <option selected>별점을 매기세요</option>
+          <option value="1">★☆☆☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="4">★★★★☆</option>
+          <option value="5">★★★★★</option>
+        </select>
+        <button type="submit" class="btn btn-danger fw-bold" style="width: 6rem;">Create</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -161,7 +231,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  height: 90vh;
+
 }
 </style>
 {% endblock %}
