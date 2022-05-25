@@ -25,12 +25,12 @@
         {% if user.is_authenticated %}
           <!-- Profile -->
           <li class="nav-item">
-            <a href="{% url 'accounts:profile' user.username %}" class="nav-link">{{ user.username }}'s Profile</a>
+            <a href="{% url 'accounts:profile' user.username %}" class="nav-link"> <i class="fa-solid fa-user fa-lg" style="color:gray;"></i> {{ user.username }}</a>
           </li>
           <!-- Logout -->
           <li class="nav-item">
             <!-- Button trigger modal -->
-            <button type="submit" class="bg-dark-secondary nav-link" style="border: none;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="submit" class="bg-dark-secondary nav-link" style="border: 2px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
               Logout
             </button>
             <!-- Modal -->
