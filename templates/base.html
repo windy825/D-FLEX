@@ -19,13 +19,18 @@
   
   <title>D-FLEX</title>
 </head>
-<body class="bg-black" style="height: 100vh;">
-  {% include '_navbar.html' %}
+<body class="bg-black">
   
-  {% block content %}
-  {% endblock %}
+  <div id="wrap">
+    {% include '_navbar.html' %}
 
-  {% include '_footer.html' %}
+    <section>
+      {% block content %}
+      {% endblock %}
+    </section>
+
+    {% include '_footer.html' %}
+  </div>
 
   {% block script %}
   {% endblock %}
@@ -33,3 +38,14 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 </html>
+
+<style>
+#wrap {
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
+}
+section {
+  padding-bottom: 90px;
+}
+</style>
