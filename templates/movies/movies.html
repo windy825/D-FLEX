@@ -5,82 +5,82 @@
   <h1 class="text-light">Movies</h1>
   <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
 
-  {% for movie in movies %}
-  <div class="my-5">
-    <a href="{% url 'movies:movie_detail' movie.pk %}">
-      <div class="movie-card">
-        <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
-        <div class="movie-info">
-          <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
-          <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-          <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:150 }}</span>
+    {% for movie in movies %}
+    <div class="my-5">
+      <a href="{% url 'movies:movie_detail' movie.pk %}">
+        <div class="movie-card">
+          <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
+          <div class="movie-info">
+            <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
+            <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
+            <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:150 }}</span>
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
-  {% endfor %}
+      </a>
+    </div>
+    {% endfor %}
 
 
 
-
-  <div class="container-fluid">
-    <ul class="pagination pagination-lg justify-content-center py-5 pagination-custom">
-      <!-- 맨처음 -->
-      {% if 1 == movies.number %}
-      <li class="page-item disabled">
-        <a href="#" class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&laquo;</span></a>
-      </li>
-      {% else %}
-      <li class="page-item">
-        <a href="?page=1" class="page-link"><span aria-hidden="true">&laquo;</span></a>
-      </li>
-      {% endif %}
-      <!-- 이전 페이지 -->
-      {% if movies.has_previous %}
-      <li class="page-item">
-        <a href="?page={{ movies.previous_page_number }}" class="page-link">prev</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <a href="#" class="page-link" tabindex="-1" aria-disabled="true">prev</a>
-      </li>
-      {% endif %}
-      <!-- 페이지 리스트 -->
-      {% for page_number in movies.paginator.page_range %}
-        {% if page_number >= movies.number|add:-3 and page_number <= movies.number|add:3 %}
-          {% if page_number == movies.number %}
-          <li class="page-item active" aria-current="page">
-            <a href="?page={{ page_number }}" class="page-link">{{ page_number }}</a>
-          </li>
-          {% else %}
-          <li class="page-item">
-            <a href="?page={{ page_number }}" class="page-link">{{ page_number }}</a>
-          </li>
-          {% endif %}
+  <!-- 페이지네이션 -->
+    <div class="container-fluid">
+      <ul class="pagination pagination-lg justify-content-center py-5 pagination-custom">
+        <!-- 맨처음 -->
+        {% if 1 == movies.number %}
+        <li class="page-item disabled">
+          <a href="#" class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a href="?page=1" class="page-link"><span aria-hidden="true">&laquo;</span></a>
+        </li>
         {% endif %}
-      {% endfor %}
-      <!-- 다음 페이지 -->
-      {% if movies.has_next %}
-      <li class="page-item">
-        <a href="?page={{ movies.next_page_numger }}" class="page-link">next</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <a href="#" class="page-link" tabindex="-1" aria-disabled="true">next</a>
-      </li>
-      {% endif %}
-      <!-- 마지막 -->
-      {% if movies.paginator.num_pages != movies.number %}
-      <li class="page-item">
-        <a href="?page={{ movies.paginator.num_pages }}" class="page-link"><span aria-hidden="true">&raquo;</span></a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <a href="#" class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&raquo;</span></a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+        <!-- 이전 페이지 -->
+        {% if movies.has_previous %}
+        <li class="page-item">
+          <a href="?page={{ movies.previous_page_number }}" class="page-link">prev</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a href="#" class="page-link" tabindex="-1" aria-disabled="true">prev</a>
+        </li>
+        {% endif %}
+        <!-- 페이지 리스트 -->
+        {% for page_number in movies.paginator.page_range %}
+          {% if page_number >= movies.number|add:-3 and page_number <= movies.number|add:3 %}
+            {% if page_number == movies.number %}
+            <li class="page-item active" aria-current="page">
+              <a href="?page={{ page_number }}" class="page-link">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+              <a href="?page={{ page_number }}" class="page-link">{{ page_number }}</a>
+            </li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        <!-- 다음 페이지 -->
+        {% if movies.has_next %}
+        <li class="page-item">
+          <a href="?page={{ movies.next_page_numger }}" class="page-link">next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a href="#" class="page-link" tabindex="-1" aria-disabled="true">next</a>
+        </li>
+        {% endif %}
+        <!-- 마지막 -->
+        {% if movies.paginator.num_pages != movies.number %}
+        <li class="page-item">
+          <a href="?page={{ movies.paginator.num_pages }}" class="page-link"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a href="#" class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 </div>
 
