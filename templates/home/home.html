@@ -1,11 +1,46 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<div style="position: fixed; z-index: -99; width: 100%; height: 100%">
+
+<div class="container-fluid img-back">
+  <div class="container">
+    <h1 class="text-center " style="font-family: 'Anton', sans-serif; color:white; font-size:180px; color:red;">D-FLEX</h1>
+    <div class="container">
+      <form action="{% url 'home:search' %}" method='POST' class="d-flex" role="search">
+        {% csrf_token %}
+        <input class="form-control p-4 bg-dark text-light fs-3" name='search' type="search" placeholder="Search" aria-label="Search" style="width: 80%; border: none; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+        <button class="btn btn-danger fs-2 fw-bold text-spacing" type="submit" style="width: 20%; border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.img-back {
+  background-image: linear-gradient(rgb(20, 20, 20), transparent, rgb(20, 20, 20)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 0.90)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 75vh;
+}
+</style>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+{% comment %} <div style="position: fixed; z-index: -99; width: 100%; height: 100%">
   <iframe  frameborder="0" height="100%" width="100%"
   src='https://www.youtube.com/embed/gNtJ4HdMavo?amp;playlist=gNtJ4HdMavo&loop=1&mute=1&autoplay=1&rel=0&controls=0&showinfo=0&modestbranding=1&start=20'
   allowfullscreen>
   </iframe>
-</div>
+</div> {% endcomment %}
 
 <div class="container">
   <h1 class="text-center " style="font-family: 'Anton', sans-serif; color:white; font-size:180px; color:red; margin-top:300px;">D-FLEX</h1>
@@ -18,6 +53,3 @@
     </form>
   </div>
 </div>
-
-
-{% endblock %}
