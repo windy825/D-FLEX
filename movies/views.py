@@ -65,23 +65,21 @@ def movie_detail(request, movie_pk):
     client_id = "MB8drhevCnawoQjOxc5S"
     client_secret = "D9wdXNLZar"
 
-    encText = urllib.parse.quote(movie.title + '영화')
+    encText = urllib.parse.quote(movie.title)
     url = "https://openapi.naver.com/v1/search/image?query=" + encText
     request1 = urllib.request.Request(url)
     request1.add_header("X-Naver-Client-Id",client_id)
     request1.add_header("X-Naver-Client-Secret",client_secret)
     response = urllib.request.urlopen(request1)
-    
+    rescode = response.getcode()
+
     response_body = response.read()
-    answer = response_body.decode('utf-8')
-    answer = json.loads(answer)
+    str_data = response_body.decode('utf-8')
+    json_data = json.loads(str_data)
     
     img_movies = []
-    for item in answer['items']:
-        img_movies.append({
-            'thumbnail':item['thumbnail'],
-            'link':item['link']
-            })
+    for item in json_data['items']:
+        img_movies.append({ 'img': item['thumbnail'] })
    
     # 감독 정보 이미지 크롤링
     encText = urllib.parse.quote(movie.director+' 감독')
