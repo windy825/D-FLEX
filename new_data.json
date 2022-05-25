@@ -4098,24 +4098,6 @@
 		}
 	},
 	{
-		"pk": 831827,
-		"model": "movies.movie",
-		"fields": {
-			"title": "나무 저 너머엔",
-			"overview": "호기심 많은 새끼를 안전하게 보호하려는 부모 너구리의 사랑을 다룬 애니메이션",
-			"poster_path": "https://image.tmdb.org/t/p/w500/rz4trwLDm7SyVHKqWhVOPoFzGRU.jpg",
-			"genres": [
-				"애니메이션",
-				"가족"
-			],
-			"popularity": 8.1,
-			"director": "Natalie Nourigat",
-			"actors": [],
-			"release_date": "2021-11-24",
-			"adult": false
-		}
-	},
-	{
 		"pk": 9764,
 		"model": "movies.movie",
 		"fields": {

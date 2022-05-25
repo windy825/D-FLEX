@@ -5,13 +5,11 @@
 {% block content %}
 
 
-
 <div class="top">
 	<div class="columns">
 		<div class="column is-full featured_wrapper p-0">
 			<img src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/banner.jpg" class="featured">
 			<div class="title_wrapper">
-                <br><br><br><br>
                 <div class="container mb-5" style="width:900px;">
                     <form action="{% url 'home:search' %}" method='POST'  class="d-flex" role="search">
                         {% csrf_token %}
@@ -25,6 +23,19 @@
 </div>
 <div class="container">
 	<div class="columns is-multiline p-0 pt-6 last">
+        <div class="column is-full">
+			<h2 class="has-text-white" style="color:red">On Youtube</h2>
+		</div>
+        <div class="container-fluid px-4" style="margin:10px; width:100%; height:100%;">
+            <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2 row-cols-xxl-2">
+                {% for video in video_list %}
+                <div style="height=450px; width=800px;">
+                    <iframe  frameborder="0" height="350px" width="600px" src="{{ video.video }}" allowfullscreen></iframe>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
 		<div class="column is-full">
 			<h2 class="has-text-white" style="color:red">Movie ( {{ movies|length }} )</h2>
 		</div>
@@ -47,10 +58,46 @@
             </div>
         </div>
 
+
         <div class="column is-full">
-			<h2 class="has-text-white" style="color:red">Community ( {{ community|length }} )</h2>
+			<h2 class="has-text-white" style="color:red">User ( {{ users|length }} )</h2><br>
 		</div>
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-4" style="margin:10px;">
+            <div class="container">
+                <div class="row">
+                
+                    {% for user in users %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="our-team">
+                            <div class="picture">
+                                <a href="{% url 'accounts:profile' user.username %}">
+                                    <img class="img-fluid" src="https://user-images.githubusercontent.com/89068148/170164738-b8385f4e-1c58-4d2e-af03-7075ee19ea3f.jpg">
+                                </a>
+                            </div>
+                            <div class="team-content">
+                                <h3 class="name">{{ user.username }}</h3>
+                                <h4 class="title">{{ user.email }}</h4>
+                            </div>
+                            <ul class="social">
+                                <li><a href="https://www.facebook.com/" class="fa fa-facebook" aria-hidden="true"></a></li>
+                                <li><a href="https://twitter.com/?lang=ko" class="fa fa-twitter" aria-hidden="true"></a></li>
+                                <li><a href="https://google.com/" class="fa fa-google-plus" aria-hidden="true"></a></li>
+                                <li><a href="https://www.youtube.com/" class="fa-brands fa-youtube" aria-hidden="true"></a></li>
+                            </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+              </div>
+
+
+        </div>
+
+        <div class="column is-full">
+			<h2 class="has-text-white" style="color:red">Community ( {{ articles|length }} )</h2>
+		</div>
+        <div class="container-fluid px-4" style="margin:10px;">
             <div class="container bg-dark p-2 my-5">
             <table class="table table-hover bg-dark rounded">
                 <!-- tbody -->
@@ -95,36 +142,13 @@
                 </tbody>
             </table>
         </div>
+
 	</div>
 </div>
-</div>
-
-
-    <h1>[일치하는 게시글 제목 or 게시글 내용]</h1>
-    {% if articles %}
-        {% for article in articles %}
-        {{ article.title }}<br>
-        {{ article.content }}
-        {% endfor %}
-    {% else %}
-        <h4>일치하는 대상이 없습니다.</h4>
-    {% endif %}
-    <hr>
-
-    <h1>[일치하는 사용자 명]</h1>
-    {% if users %}
-        {% for user in users %}
-        {{ user.username }}
-        {% endfor %}
-    {% else %}
-        <h4>일치하는 대상이 없습니다.</h4>
-    {% endif %}
-    <hr>
-</div>
-
 
 
 <style>
+    
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
 
     body,
@@ -238,6 +262,109 @@
         opacity: 1;
         top: 50%;
       }
+    
+    .our-team {
+      padding: 30px 0 40px;
+      margin-bottom: 30px;
+      background-color: #f7f5ec;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .our-team .picture {
+      display: inline-block;
+      height: 130px;
+      width: 130px;
+      margin-bottom: 50px;
+      z-index: 1;
+      position: relative;
+    }
+    
+    .our-team .picture::before {
+      content: "";
+      width: 100%;
+      height: 0;
+      border-radius: 50%;
+      background-color: gray;
+      position: absolute;
+      bottom: 135%;
+      right: 0;
+      left: 0;
+      opacity: 0.9;
+      transform: scale(3);
+      transition: all 0.3s linear 0s;
+    }
+    
+    .our-team:hover .picture::before {
+      height: 100%;
+    }
+    
+    .our-team .picture::after {
+      content: "";
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: gray;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    
+    .our-team .picture img {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+      transform: scale(1);
+      transition: all 0.9s ease 0s;
+    }
+    
+    .our-team:hover .picture img {
+      box-shadow: 0 0 0 14px #f7f5ec;
+      transform: scale(0.7);
+    }
+    
+    .our-team .title {
+      display: block;
+      font-size: 15px;
+      color: #4e5052;
+      text-transform: capitalize;
+    }
+    
+    .our-team .social {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      background-color: red;
+      position: absolute;
+      bottom: -100px;
+      left: 0;
+      transition: all 0.5s ease 0s;
+    }
+    
+    .our-team:hover .social {
+      bottom: 0;
+    }
+    
+    .our-team .social li {
+      display: inline-block;
+    }
+    
+    .our-team .social li a {
+      display: block;
+      padding: 10px;
+      font-size: 17px;
+      color: white;
+      transition: all 0.3s ease 0s;
+      text-decoration: none;
+    }
+    
+    .our-team .social li a:hover {
+      color: #1369ce;
+      background-color: #f7f5ec;
+    }
+    
 </style>
 
 
