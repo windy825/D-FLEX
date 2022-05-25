@@ -37,6 +37,11 @@
         <img src="{{ movie.poster_path }}" alt="" style="height: 50vh; border-radius: 2%;">
       </div>
     </div>
+    <div class="container-fluid">
+      {% for img_movie in img_movies %}
+      <img src="{{ img_movie }}" alt="">
+      {% endfor %}
+    </div>
   </div>
 
 
@@ -48,7 +53,7 @@
       <div class="card-body bg-dark">
         <!-- 댓글 목록 -->
         {% if movie.review_set.count > 0 %}
-        <div class="container">
+        <div class="container-fluid">
           {% for review in movie.review_set.all %}
           <div class="comment py-2">
             <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
@@ -104,6 +109,21 @@
                 {% endif %}
               </div>
             </div>
+            <!-- 평점 -->
+            <i class="fa-regular fa-star"></i>
+            <div class="text-danger fw-bold small">
+              {% if review.rating == 1 %}
+              ★☆☆☆☆
+              {% elif review.rating == 2 %}
+              ★★☆☆☆
+              {% elif review.rating == 3 %}
+              ★★★☆☆
+              {% elif review.rating == 4 %}
+              ★★★★☆
+              {% else %}
+              ★★★★★
+              {% endif %}
+            </div>
             <!-- 내용 -->
             <span class="text-light small">
               {{ review.content|linebreaksbr }}
@@ -120,7 +140,7 @@
     <form action="{% url 'movies:review_create' movie.pk %}" method="post" class="comment-create-form post-form my-3" data-article-id="{{ movie.pk }}">
       {% csrf_token %}
       <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
-      <select class="form-select" name="rating"  aria-label="here">
+      <select class="form-select bg-dark text-light" name="rating"  aria-label="here">
         <option selected>별점을 매기세요</option>
         <option value=1>★☆☆☆☆</option>
         <option value=2>★★☆☆☆</option>

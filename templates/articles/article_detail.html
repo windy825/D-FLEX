@@ -134,7 +134,7 @@
     <div class="card-body bg-dark">
       <!-- 댓글 목록 -->
       {% if article.comment_set.count > 0 %}
-      <div class="container">
+      <div class="container-fluid">
         {% for comment in article.comment_set.all %}
         <div class="comment py-2">
           <!-- 작성자, 작성일, 수정일, 수정 버튼, 삭제 버튼 -->
