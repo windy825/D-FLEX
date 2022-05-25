@@ -16,7 +16,6 @@ def home(request):
 def searching(request):
     if request.method == 'POST':
         target = request.POST['search']
-        print(target)
 
         # 영화 제목 일치 여부
         answer_movies = []

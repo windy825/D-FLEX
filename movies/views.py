@@ -11,12 +11,6 @@ from .models import Movie, Review
 # path('', views.movies),
 @require_safe
 def movies(request):
-    # movies = Movie.objects.all().order_by('-release_date')
-    # context = {
-    #     'movies': movies
-    # }
-    # return render(request, 'movies/movies.html', context)
-
     page = request.GET.get('page', '1')
     movies = Movie.objects.order_by('-release_date')
     MOVIES_PER_PAGE = 40
@@ -44,8 +38,9 @@ def movie_detail(request, movie_pk):
     # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
     # search_response_data = youtube.search().list(
-    # q = movie.title + ' 영화',
+    # q = movie.title + '영화',
     # order = "relevance",
+    # fields = "items(id)",
     # part = "snippet",
     # maxResults = 10
     # ).execute()['items']
@@ -54,8 +49,7 @@ def movie_detail(request, movie_pk):
     # for item in search_response_data:
     #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
     #     title = item['snippet']['title']
-    #     date = item['snippet']['publishedAt']
-    #     video_list.append({'video':video, 'title':title, 'date':date})
+    #     video_list.append({'video':video, 'title':title, })
 
     import os
     import sys
@@ -178,10 +172,10 @@ def for_you(request, movie_pk):
             if flag:
                 break
             if actor in movie.actors:
-                recommend_movies_by_actors.append(movie)
+                recommend_movies_by_actors.append({'actor':actor, 'movie':movie})
                 flag = 1
                 break
-    
+    print(recommend_movies_by_actors)
     
     # 장르 기반 추천
     genres = pick_movie.genres

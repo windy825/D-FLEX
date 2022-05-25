@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="top">
+    <div class="columns">
+        <div class="column is-full featured_wrapper p-0">
+            <img src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/banner.jpg" class="featured">
+        </div>
+    </div>
+</div>
 
     <h1>FOR YOU</h1>
     <br>
@@ -8,7 +15,7 @@
     <br>
     <h3>배우 기반 (같은 배우 출연)</h3>
     {% for movie in recommend_movies_by_actors %}
-        {{ movie.title }} | {{ movie.actors }}
+        {{ movie.actor }} |{{ movie.movie.title }}
         <hr>
     {% endfor %}
     <hr>
@@ -22,5 +29,152 @@
     {% for movie in recommend_movie_by_overview_keywords %}
     {{ movie }}<br>
     {% endfor %}
+
+
+<div class="container">
+	<div class="columns is-multiline p-0 pt-6 last">
+		<div class="column is-full">
+			<h2 class="has-text-white" style="color:red">Movie ( {{ movies|length }} )</h2>
+		</div>
+        <div class="container-fluid px-4" style="margin:10px;">
+            <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+                {% for movie in movies %}
+                <div class="my-5">
+                    <a href="{% url 'movies:movie_detail' movie.pk %}">
+                    <div class="movie-card">
+                        <img src="{{ movie.poster_path }}" alt="포스터 이미지" class="rounded">
+                        <div class="movie-info">
+                        <span class="text-danger text-center fs-2 fw-bold">{{ movie.title }}</span>
+                        <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
+                        <span class="movie-overview d-inline-block text-secondary fw-light small">{{ movie.overview|truncatechars:100 }}...</span>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+	</div>
+</div>
+
+
+<style>
+    
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
+
+    body,
+    html {
+        background: #000000;
+        padding: 0;
+        margin: 0;
+        padding-bottom: 6rem;
+        font-family: "Montserrat", sans-serif;
+        width: 100%;
+    }
+    .container {
+        padding-bottom: 3rem;
+    }
+    img {
+        -webkit-box-reflect: below 5px
+            linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
+        -webkit-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+    .container img:hover {
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+    .last {
+        margin-top: 6.5rem;
+    }
+    .featured_wrapper {
+        position: relative;
+    }
+    .featured_wrapper img {
+        width: 100%;
+        width: 100%;
+        height: 350px;
+        -o-object-fit: cover;
+        object-fit: cover;
+        -o-object-position: top;
+        object-position: top;
+    }
+    .title_wrapper {
+        position: absolute;
+        width: 100%;
+        left: 2rem;
+        bottom: 2rem;
+        padding: 20px 40px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .title_wrapper h1 {
+        width: 70%;
+    }
+    .button {
+        background: #f40612 !important;
+        color: #fff !important;
+        font-size: 18px;
+        padding: 0.5rem 3rem;
+        outline: none;
+        border: 0 !important;
+    }
+    @media (max-width: 768px) {
+        .title_wrapper {
+            text-align: center;
+            left: 0;
+        }
+        .title_wrapper h1 {
+            font-size: 32px !important;
+            width: 100%;
+        }
+        .container {
+            padding: 20px;
+        }
+    }
+    @media (max-width: 480px) {
+        .column.is-one-quarter img {
+            width: 100%;
+            margin-bottom: 7rem;
+        }
+    }
+
+    .movie-card {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      .movie-card img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.25s linear;
+      }
+      .movie-card:hover img {
+        opacity: 0.07;
+        transform: scale(1.25);
+        border-radius: 0.375rem!important;
+      }
+      .movie-info {
+        width: 80%;
+        opacity: 0;
+        transform: translateX(-50%) translateY(-50%);
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transition: all 600ms ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .movie-card:hover .movie-info {
+        opacity: 1;
+        top: 50%;
+      }
+</style>
+
 
 {% endblock content %}
