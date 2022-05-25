@@ -25,87 +25,90 @@
 
 
 {% block content %}
-<div class="container my-5 bg-dark-secondary">
-  <!-- username -->
-  <div class="container border-bottom p-3">
-    <h2 class="text-light mb-0">
-      <strong>{{ person.username }}</strong>'s profile
-    </h2>
-  </div>
-
-  <!-- 작성 게시글 목록 -->
-  <div class="container border-bottom p-3">
-    <div class="container p-3">
+<div class="container-fluid px-4">
+  <h1 class="text-light">Profile</h1>
+  <div class="container my-5 bg-dark-secondary">
+    <!-- username -->
+    <div class="container border-bottom p-3">
       <h2 class="text-light mb-0">
-        Articles
+        <strong>{{ person.username }}</strong>'s profile
       </h2>
     </div>
-    <div class="list-group rounded-0 bg-dark">
-      {% for article in person.article_set.all %}
-      <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
-        <div class="d-flex w-100 justify-content-between">
-          <h6 class="mb-1 text-light">
-            {{ article.title }}
-            {% if article.comment_set.count > 0 %}
-            <span class="small text-danger fw-bold py-2">
-              {{ article.comment_set.count }}
-            </span>
-            {% endif %}
-          </h6>
-          <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
-        </div>
-        <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
-      </a>
-      {% endfor %}
+  
+    <!-- 작성 게시글 목록 -->
+    <div class="container border-bottom p-3">
+      <div class="container p-3">
+        <h2 class="text-light mb-0">
+          Articles
+        </h2>
+      </div>
+      <div class="list-group rounded-0 bg-dark">
+        {% for article in person.article_set.all %}
+        <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1 text-light">
+              {{ article.title }}
+              {% if article.comment_set.count > 0 %}
+              <span class="small text-danger fw-bold py-2">
+                {{ article.comment_set.count }}
+              </span>
+              {% endif %}
+            </h6>
+            <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
+          </div>
+          <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
+        </a>
+        {% endfor %}
+      </div>
     </div>
-  </div>
-
-  <!-- 작성 댓글 목록 -->
-  <div class="container border-bottom p-3">
+  
+    <!-- 작성 댓글 목록 -->
+    <div class="container border-bottom p-3">
+      <div class="container p-3">
+        <h2 class="text-light mb-0">
+          Comments
+        </h2>
+      </div>
+      <div class="list-group rounded-0 bg-dark">
+        {% for comment in person.comment_set.all %}
+        <a href="{% url 'articles:article_detail' comment.article.pk %}" class="list-group-item list-group-item-action bg-dark">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1 text-light">
+              {{ comment.content }}
+            </h6>
+            <small class="text-secondary">{{ comment.article.title }}</small>
+          </div>
+          <small class="text-secondary">{{ comment.created_at|date:'y-m-d H:i' }}</small>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  
+    <!-- 좋아요 게시글 목록 -->
     <div class="container p-3">
-      <h2 class="text-light mb-0">
-        Comments
-      </h2>
-    </div>
-    <div class="list-group rounded-0 bg-dark">
-      {% for comment in person.comment_set.all %}
-      <a href="{% url 'articles:article_detail' comment.article.pk %}" class="list-group-item list-group-item-action bg-dark">
-        <div class="d-flex w-100 justify-content-between">
-          <h6 class="mb-1 text-light">
-            {{ comment.content }}
-          </h6>
-          <small class="text-secondary">{{ comment.article.title }}</small>
-        </div>
-        <small class="text-secondary">{{ comment.created_at|date:'y-m-d H:i' }}</small>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-
-  <!-- 좋아요 게시글 목록 -->
-  <div class="container p-3">
-    <div class="container p-3">
-      <h2 class="text-light mb-0">
-        Like Articles
-      </h2>
-    </div>
-    <div class="list-group rounded-0 bg-dark">
-      {% for article in person.like_articles.all %}
-      <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
-        <div class="d-flex w-100 justify-content-between">
-          <h6 class="mb-1 text-light">
-            {{ article.title }}
-            {% if article.comment_set.count > 0 %}
-            <span class="small text-danger fw-bold py-2">
-              {{ article.comment_set.count }}
-            </span>
-            {% endif %}
-          </h6>
-          <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
-        </div>
-        <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
-      </a>
-      {% endfor %}
+      <div class="container p-3">
+        <h2 class="text-light mb-0">
+          Like Articles
+        </h2>
+      </div>
+      <div class="list-group rounded-0 bg-dark">
+        {% for article in person.like_articles.all %}
+        <a href="{% url 'articles:article_detail' article.pk %}" class="list-group-item list-group-item-action bg-dark">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1 text-light">
+              {{ article.title }}
+              {% if article.comment_set.count > 0 %}
+              <span class="small text-danger fw-bold py-2">
+                {{ article.comment_set.count }}
+              </span>
+              {% endif %}
+            </h6>
+            <span class="badge bg-danger rounded-pill">{{ article.like_users.count }}</span>
+          </div>
+          <small class="text-secondary">{{ article.created_at|date:'y-m-d H:i' }}</small>
+        </a>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>

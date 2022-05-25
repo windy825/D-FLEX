@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
 
+from django.core.paginator import Paginator
+
 from movies.forms import ReviewForm
 from .models import Movie, Review
 
@@ -9,9 +11,19 @@ from .models import Movie, Review
 # path('', views.movies),
 @require_safe
 def movies(request):
-    movies = Movie.objects.all().order_by('-release_date')
+    # movies = Movie.objects.all().order_by('-release_date')
+    # context = {
+    #     'movies': movies
+    # }
+    # return render(request, 'movies/movies.html', context)
+
+    page = request.GET.get('page', '1')
+    movies = Movie.objects.order_by('-release_date')
+    MOVIES_PER_PAGE = 40
+    paginator = Paginator(movies, MOVIES_PER_PAGE)
+    page_movies = paginator.get_page(page)
     context = {
-        'movies': movies
+        'movies': page_movies
     }
     return render(request, 'movies/movies.html', context)
 

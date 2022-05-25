@@ -1,62 +1,65 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container bg-dark p-2">
-  <table class="table table-hover bg-dark rounded">
-    <!-- thead -->
-    <thead>
-      <tr class="text-center text-secondary">
-        <th scope="col" class="col-1">번호</th>
-        <th scope="col" class="col-1"><i class="fa fa-solid fa-heart text-danger"></i></th>
-        <th scope="col" class="col-5">제목</th>
-        <th scope="col" class="col-3">작성자</th>
-        <th scope="col" class="col-2">작성일</th>
-      </tr>
-    </thead>
-    <!-- tbody -->
-    <tbody>
-      {% for article in articles %}
-      <tr class="text-center text-light">
-        <!-- 게시글 번호 -->
-        <td class="text-end text-secondary">
-          {{ article.pk }}
-        </td>
-        <!-- 좋아요 수 -->
-        <td>
-          {% if article.like_users.count > 0 %}
-            <span class="badge text-bg-danger fw-bold">
-              {{ article.like_users.count }}
-            </span>
-          {% endif %}
-        </td>
-        <!-- 제목, 댓글 수 -->
-        <td class="text-start">
-          <a href="{% url 'articles:article_detail' article.pk %}" class="text-decoration-none">
-            <span class="text-light">{{ article.title }}</span>
-            {% if article.comment_set.count > 0 %}
-              <span class="small text-danger fw-bold py-2">
-                {{ article.comment_set.count }}
+<div class="container-fluid px-4">
+  <h1 class="text-light">Community</h1>
+  <div class="container bg-dark p-2 my-5">
+    <table class="table table-hover bg-dark rounded">
+      <!-- thead -->
+      <thead>
+        <tr class="text-center text-secondary">
+          <th scope="col" class="col-1">번호</th>
+          <th scope="col" class="col-1"><i class="fa fa-solid fa-heart text-danger"></i></th>
+          <th scope="col" class="col-5">제목</th>
+          <th scope="col" class="col-3">작성자</th>
+          <th scope="col" class="col-2">작성일</th>
+        </tr>
+      </thead>
+      <!-- tbody -->
+      <tbody>
+        {% for article in articles %}
+        <tr class="text-center text-light">
+          <!-- 게시글 번호 -->
+          <td class="text-end text-secondary">
+            {{ article.pk }}
+          </td>
+          <!-- 좋아요 수 -->
+          <td>
+            {% if article.like_users.count > 0 %}
+              <span class="badge text-bg-danger fw-bold">
+                {{ article.like_users.count }}
               </span>
             {% endif %}
-          </a>
-        </td>
-        <!-- 작성자 -->
-        <td>
-          <a href="{% url 'accounts:profile' article.user.username %}" class="text-decoration-none">
-            <span class="text-light">{{ article.user.username }}</span>
-          </a>
-        </td>
-        <!-- 작성일 -->
-        <td>
-          <span class="text-secondary" style="font-size: 12px;">{{ article.created_at|date:'y-m-d H:i' }}</span>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <!-- 작성 버튼 -->
-  <div class="container d-flex justify-content-end">
-    <a href="{% url 'articles:article_create' %}" class="btn btn-danger fw-bold fs-5 px-3 text-spacing">Create</a>
+          </td>
+          <!-- 제목, 댓글 수 -->
+          <td class="text-start">
+            <a href="{% url 'articles:article_detail' article.pk %}" class="text-decoration-none">
+              <span class="text-light">{{ article.title }}</span>
+              {% if article.comment_set.count > 0 %}
+                <span class="small text-danger fw-bold py-2">
+                  {{ article.comment_set.count }}
+                </span>
+              {% endif %}
+            </a>
+          </td>
+          <!-- 작성자 -->
+          <td>
+            <a href="{% url 'accounts:profile' article.user.username %}" class="text-decoration-none">
+              <span class="text-light">{{ article.user.username }}</span>
+            </a>
+          </td>
+          <!-- 작성일 -->
+          <td>
+            <span class="text-secondary" style="font-size: 12px;">{{ article.created_at|date:'y-m-d H:i' }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <!-- 작성 버튼 -->
+    <div class="container d-flex justify-content-end">
+      <a href="{% url 'articles:article_create' %}" class="btn btn-danger fw-bold fs-5 px-3 text-spacing">Create</a>
+    </div>
   </div>
 </div>
 {% endblock %}
