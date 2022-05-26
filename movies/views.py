@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
+from django.contrib.auth.decorators import login_required
 
 from django.core.paginator import Paginator
 
@@ -129,8 +130,37 @@ def review_create(request, movie_pk):
 
 # path('<int:movie_pk>/review/<int:review_pk>/update/', views.review_update),
 # @login_required
+# def review_update(request, movie_pk, review_pk):
+#     pass
+
+
+
+
+@login_required
+@require_http_methods(['GET', 'POST'])
 def review_update(request, movie_pk, review_pk):
-    pass
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    review = get_object_or_404(Review, pk=review_pk)
+    if request.user != review.user:
+        return redirect('movies:movie_detail', movie_pk)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('movies:movie_detail', movie_pk)
+    else:
+        form = ReviewForm(instance=review)
+    context = {
+        'movie': movie,
+        'review': review,
+        'reivew_form': form,
+    }
+    return render(request, 'movies/review_update.html', context)
+
+
+
+
+
 
 
 # path('<int:movie_pk>/review/<int:review_pk>/delete/', views.review_delete),
