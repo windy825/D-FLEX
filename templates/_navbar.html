@@ -34,26 +34,7 @@
               Logout
             </button>
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                  <div class="modal-header" style="border: none;">
-                    <h5 class="modal-title text-light" id="exampleModalLabel">Logout</h5>
-                    <button type="button" class="btn-close bg-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body text-light">
-                    Are you sure you want to log out?
-                  </div>
-                  <div class="modal-footer" style="border: none;">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="{% url 'accounts:logout' %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+
             {% comment %} <form action="{% url 'accounts:logout' %}" method="post">
               {% csrf_token %}
               <button type="submit" class="bg-dark-secondary nav-link" style="border: none;">Logout</button>

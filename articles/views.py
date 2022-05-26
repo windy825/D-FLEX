@@ -34,6 +34,7 @@ def article_create(request):
     return render(request, 'articles/article_create.html', context)
 
 
+@login_required
 @require_safe
 def article_detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)

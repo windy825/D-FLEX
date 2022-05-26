@@ -25,12 +25,12 @@ def signup(request):
 @require_http_methods(['GET', 'POST'])
 def login(request):
     if request.user.is_authenticated:
-        return redirect('articles:articles')
+        return redirect('home:home')
     if 'POST' == request.method:
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect(request.GET.get('next') or 'articles:articles')
+            return redirect(request.GET.get('next') or 'home:home')
     else:
         form = AuthenticationForm()
     context = {
@@ -43,7 +43,7 @@ def login(request):
 def logout(request):
     if request.user.is_authenticated:
         auth_logout(request)
-    return redirect('articles:articles')
+    return redirect('home:home')
 
 
 def user(request):
