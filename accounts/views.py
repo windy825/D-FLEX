@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import login as auth_login, logout as auth_logout, get_user_model
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as auth_login, logout as auth_logout, get_user_model, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm
 from django.core.paginator import Paginator
 from decouple import config
 import requests
@@ -95,6 +95,7 @@ def signup(request):
     if 'POST' == request.method:
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            'https://user-images.githubusercontent.com/89068148/170427885-7cfa46be-c5a8-48c8-bc7e-cb8ffe19ca93.png'
             user = form.save()
             auth_login(request, user)
             return redirect('articles:articles')
@@ -104,6 +105,21 @@ def signup(request):
         'form': form,
     }
     return render(request, 'accounts/signup.html', context)
+
+@require_http_methods(['GET', 'POST'])
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect('articles:index')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        'form':form,
+    }
+    return render(request, 'accounts/change_password.html', context)
 
 
 @require_http_methods(['GET', 'POST'])
@@ -130,8 +146,19 @@ def logout(request):
     return redirect('home:home')
 
 
-def user(request):
-    pass
+@login_required
+def update(request):
+    if request.method == 'POST':
+        change_from = CustomUserUpdateForm(request.POST, instance=request.user)
+        if change_from.is_valid():
+            change_from.save()
+            return redirect('accounts:profile', request.user.username)
+    else:
+	    change_from = CustomUserUpdateForm(instance=request.user)
+    context = {
+        'form':change_from
+    }
+    return render(request, 'accounts/update.html', context)
 
 
 def profile(request, username):
