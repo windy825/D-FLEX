@@ -7,11 +7,12 @@
     {% csrf_token %}
     <div class="form-group my-3">
       <label for="content" class="form-label text-secondary">Content</label>
-      <textarea name="content" id="content" cols="5" rows="3" class="form-contro bg-secondary text-light">{{ review_form.content.value|default_if_none:'' }}</textarea>
+      <textarea name="content" id="content" rows="10" class="form-control bg-secondary text-light">{{ review.content.value|default_if_none:'' }}</textarea>
+    </div>
+    <div class="form-group my-3">
       <label for="rating" class="form-label text-secondary">Rating</label>
       <select class="form-select bg-dark text-light" name="rating"  aria-label="here">
-        <option selected>별점을 매기세요</option>
-        <option value=1>★☆☆☆☆</option>
+        <option value=1 selected>★☆☆☆☆</option>
         <option value=2>★★☆☆☆</option>
         <option value=3>★★★☆☆</option>
         <option value=4>★★★★☆</option>

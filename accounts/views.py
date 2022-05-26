@@ -154,7 +154,7 @@ def update(request):
             change_from.save()
             return redirect('accounts:profile', request.user.username)
     else:
-	    change_from = CustomUserUpdateForm(instance=request.user)
+        change_from = CustomUserUpdateForm(instance=request.user)
     context = {
         'form':change_from
     }

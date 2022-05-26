@@ -168,8 +168,7 @@
         {% csrf_token %}
         <textarea name="content" id="content" cols="5" rows="3" class="form-control my-3 bg-dark text-light" {% if not request.user.is_authenticated %}disabled{% endif %}>{{ review_form.content.value|default_if_none:'' }}</textarea>
         <select class="form-select bg-dark text-light mb-3" name="rating">
-          <option selected>별점을 매기세요</option>
-          <option value="1">★☆☆☆☆</option>
+          <option value="1" selected>★☆☆☆☆</option>
           <option value="2">★★☆☆☆</option>
           <option value="3">★★★☆☆</option>
           <option value="4">★★★★☆</option>
