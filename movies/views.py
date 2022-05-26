@@ -34,24 +34,24 @@ def movie_detail(request, movie_pk):
     form = ReviewForm()
 
     # 영상 리스트 by youtube api
-    # from googleapiclient.discovery import build
-    # DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
-    # YOUTUBE_API_SERVICE_NAME="youtube"
-    # YOUTUBE_API_VERSION="v3"
-    # youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    from googleapiclient.discovery import build
+    DEVELOPER_KEY = "AIzaSyC1CzkerAIdAl_9mBAjF9m1uPBzOmCvhbs"
+    YOUTUBE_API_SERVICE_NAME="youtube"
+    YOUTUBE_API_VERSION="v3"
+    youtube = build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
-    # search_response_data = youtube.search().list(
-    # q = movie.title + '영화',
-    # order = "relevance",
-    # fields = "items(id)",
-    # part = "snippet",
-    # maxResults = 6
-    # ).execute()['items']
+    search_response_data = youtube.search().list(
+    q = movie.title + '영화',
+    order = "relevance",
+    fields = "items(id)",
+    part = "snippet",
+    maxResults = 6
+    ).execute()['items']
 
-    # video_list = []
-    # for item in search_response_data:
-    #     video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
-    #     video_list.append({'video':video})
+    video_list = []
+    for item in search_response_data:
+        video = f"https://www.youtube.com/embed/{item['id']['videoId']}?rel=0&controls=0&showinfo=0"
+        video_list.append({'video':video})
 
 
     import urllib.request
@@ -105,7 +105,7 @@ def movie_detail(request, movie_pk):
         'movie': movie,
         'review_form': form,
         'genres':genres,
-        # 'video_list':video_list,
+        'video_list':video_list,
         'img_movies':img_movies,
         'img_actors':img_actors,
     }
