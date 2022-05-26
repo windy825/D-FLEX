@@ -12,4 +12,6 @@ urlpatterns = [
 
     #kakao 
     path('kakao_login/', views.kakao_login, name='kakao_login'),
+    path('kakao_unlink/', views.kakao_unlink, name='kakao_unlink'),
+    path('auth/', views.oauth, name='auth'),
 ]

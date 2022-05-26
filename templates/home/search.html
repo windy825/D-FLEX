@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <h1 class="text-light fw-bold mt-4 mb-3">Related movies ({{movies|length}})</h1>
+  <h1 class="text-light fw-bold mt-4 mb-3">Related movies ( {{movies|length}} )</h1>
 	<div class="container border-top">
     <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 mt-4">
       {% for movie in movies %}
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <h1 class="text-light fw-bold mt-4 mb-3">Community ({{articles|length}})</h1>
+  <h1 class="text-light fw-bold mt-4 mb-3">Community ( {{articles|length}} )</h1>
 	<div class="container border-top">
     <div class="list-group rounded-0 bg-dark mt-4">
       {% for article in articles %}
@@ -87,7 +87,7 @@
                             <div class="our-team">
                             <div class="picture">
                                 <a href="{% url 'accounts:profile' user.username %}">
-                                    <img class="img-fluid" src="https://user-images.githubusercontent.com/89068148/170164738-b8385f4e-1c58-4d2e-af03-7075ee19ea3f.jpg">
+                                    <img class="img-fluid" src="{{ user.profile_image }}">
                                 </a>
                             </div>
                             <div class="team-content">
