@@ -9,4 +9,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('user/', views.user, name='user'),
     path('profile/<username>', views.profile, name='profile'),
+
+    #kakao 
+    path('kakao_login/', views.kakao_login, name='kakao_login'),
 ]
