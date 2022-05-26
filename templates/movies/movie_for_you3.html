@@ -22,54 +22,30 @@
     <a name="selections">
 </div>
 
-
 <div class="container-fluid">
 	<div class="row  p-0 pt-6 last">
         {% for item in recommend_movies_by_overview %}
             <div id="card_container">
                 <div id="card">
-                <div class="shine"></div>
-                <div class="text-block">
-                    <h1>{{ item.movie.title }}<br> <small>{{ item.movie.genres }}</small></h1><br><br>
-                    <h3 class="text-danger">same Keywords : {{ item.keywords|length }}</h3>
-                    <h5 class="mt-2">{% for word in item.keywords %}
-                        {{ word }}
-                        {% endfor %}
-                    </h5>
-                    <br>
-                    <br>
-                    <button >
-                        <a href="{% url 'movies:movie_detail' item.movie.pk %}" style="text-decoration:none; color:white;">
-                            GET IT !!
-                        </a>
-                    </button>
+                  <div class="shine"></div>
+                  <div class="text-block">
+                      <h1>{{ item.movie.title }}<br> <small>{{ item.movie.genres }}</small></h1><br><br>
+                      <h3 class="text-danger">same Keywords : {{ item.keywords|length }}</h3>
+                      <h5 class="mt-2">{% for word in item.keywords %}
+                          {{ word }}
+                          {% endfor %}
+                      </h5>
+                      <br>
+                      <br>
+                      <button >
+                          <a href="{% url 'movies:movie_detail' item.movie.pk %}" style="text-decoration:none; color:white;">
+                              GET IT !!
+                          </a>
+                      </button>
+                  </div>
+                  </div>
                 </div>
-                </div>
-            </div>
-        {% endfor %}
-
-
-                {% for movie in recommend_movies_by_genres %}
-                <div class="my-5">
-                    <a href="{% url 'movies:movie_detail' movie.movie.pk %}">
-                    <div class="movie-card">
-                        <img src="{{ movie.movie.poster_path }}" alt="이미지" class="rounded">
-                        <div class="movie-info">
-                            <span class="text-danger text-center fs-2 fw-bold">{{ movie.movie.title }}</span>
-                            <hr style="border-top: 2px solid #f8f9fa; width: 100%;">
-                            <span class="movie-overview d-inline-block text-white" style="color:white">
-                                {% for genre in movie.same_genres %}
-                                {{ genre }}
-                                {% endfor %}
-                            </span>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        
+                {% endfor %} 
 
 
 

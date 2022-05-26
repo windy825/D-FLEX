@@ -22,7 +22,7 @@ class CustomUserUpdateForm(UserChangeForm):
     ]
 
     username = forms.CharField(max_length=100, required=True)
-    birthday = forms.DateTimeField(required=False)
+    birthday = forms.CharField(max_length=100, required=True)
     gender = forms.CharField(max_length=100, required=True, widget=forms.Select(choices = gender_choice))
 
     class Meta:

@@ -2,13 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
 from django.contrib.auth.decorators import login_required
-
 from django.core.paginator import Paginator
-
 from movies.forms import ReviewForm
 from .models import Movie, Review
 
 actors_img = []
+
 
 
 # path('', views.movies),
@@ -248,7 +247,7 @@ def for_you3(request, movie_pk):
         '위해', '할', '날', '자신을', '나오는', '무렵', '전부', '수', '자신이', '그가', '마침내',\
         '전', '있음을', '알', '없는', '한', '후', '한', '두', '될', '채', '더', '그의', '그가', '그는',\
         '모든', '하지만', '최고의', '하는데', '그리고', '오랜', '못한', '예상치', '새로운', '들어온', '속', '맞서', '하는데…',\
-        '맞서', '넘어', }])
+        '맞서', '넘어', '것', '함께', '차츰', '마치고', '사이에는', '그에게' , '서로의', '가능한', '겪으며'}])
     answer = []
     for movie in movies:
         temp = set(movie.overview.split())
@@ -268,3 +267,71 @@ def for_you3(request, movie_pk):
     }
 
     return render(request, 'movies/movie_for_you3.html', context)
+
+
+def for_you4(request, movie_pk):
+    pick_movie = get_object_or_404(Movie, pk=movie_pk)
+
+
+    # 사운드 파일 추출 할거임 근데 토글을 마이크 버튼 필요할듯???
+    import requests, json
+    import queue, os, threading
+    import sounddevice as sd
+    import soundfile as sf
+    from scipy.io.wavfile import write
+    import time
+
+
+    q = queue.Queue()
+    recorder = False
+    recording = False
+
+    def complicated_record():
+        with sf.SoundFile("sounds/temp.wav", mode='w', samplerate=16000, subtype='PCM_16', channels=1) as file:
+            with sd.InputStream(samplerate=16000, dtype='int16', channels=1, callback=complicated_save):
+                while recording:
+                    file.write(q.get())
+                        
+    def complicated_save(indata, frames, time, status):
+                q.put(indata.copy())
+                
+    def start():
+                global recorder
+                global recording
+                recording = True
+                recorder = threading.Thread(target=complicated_record)
+                print('start recording')
+                recorder.start()
+                
+    def stop():
+                global recorder
+                global recording
+                recording = False
+                recorder.join()
+                print('stop recording')
+            
+
+    start()
+    time.sleep(5)
+    stop()
+
+    url = "https://kakaoi-newtone-openapi.kakao.com/v1/recognize"
+    voice_key = 'cb99e9641f5d1a1b75618fccfb9a951f'
+    headers = {
+            'Host': 'kakaoi-newtone-openapi.kakao.com',
+            'Content-Type': 'application/octet-stream',
+            'X-DSS-Service': 'DICTATION',
+            'Authorization': f'KakaoAK {voice_key}',
+        }
+    data = open("sounds/temp.wav", "rb").read() # wav 파일을 바이너리 형태로 변수에 저장한다.
+    response = requests.post('https://kakaoi-newtone-openapi.kakao.com/v1/recognize', headers=headers, data=data)
+
+    print(response.text)
+
+
+
+    context = {
+        'pick_movie' : pick_movie,
+    }
+
+    return render(request, 'movies/movie_for_you4.html', context)

@@ -16,4 +16,5 @@ urlpatterns = [
     path('for-you/<int:movie_pk>/', views.for_you, name='for_you'),
     path('for-you2/<int:movie_pk>/', views.for_you2, name='for_you2'),
     path('for-you3/<int:movie_pk>/', views.for_you3, name='for_you3'),
+    path('for-you4/<int:movie_pk>/', views.for_you4, name='for_you4'),
 ]
