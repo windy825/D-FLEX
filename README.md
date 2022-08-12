@@ -15,7 +15,7 @@
 - Back-End
 - Python
 - Django
-- Kakao OAuth
+- Kakao OAuth .
 
 ### `팀원` 함희주
 
