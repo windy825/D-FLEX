@@ -152,12 +152,11 @@
 ### `팀장` 임진현
 
 - Back-End
-- Python
 - Django
 - Kakao OAuth 간편로그인
 - NAVER, YOUTUBE, GOOGLE API 이미지 크롤링, 검색서비스, 음성인식
 - 추천시스템
-- 추가) MOVIES CSS
+- HTML, CSS
 
 ### `팀원` 함희주
 
@@ -166,7 +165,7 @@
 - CSS
 - JavaScript
 - BootStrap 5
-- 추가) Django accounts
+- Django accounts
 
 
 
